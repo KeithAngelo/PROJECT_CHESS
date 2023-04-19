@@ -14,15 +14,14 @@ public class Pawn extends ChessPiece{
     }
 
     @Override
-    public ArrayList<ChessCoor> GetPotentialMoves(ChessCoor CurrentCoorm, PieceColor color) {
+    public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'GetPotentialMoves'");
     }
 
     @Override
-    public boolean AllowedToMoveTo(ChessBoard CurrentBoard, ChessCoor newCoor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'AllowedToMoveTo'");
+    public boolean AllowedToMoveTo(ChessBoard CurrentBoard, ChessCoor CurrentCoord, ChessCoor newCoor) {
+        return true;
     }
     
 }

@@ -21,6 +21,7 @@ import javax.swing.border.Border;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import Chess.Piece.ChessPiece;
 import Chess.Util.ChessCoor;
@@ -153,7 +154,6 @@ public class JChessUI extends JPanel{
     public JChessUI(int Dimension_XandY, PieceColor PlayerColor){ //If user wants to specify color
         this.PlayerColor = PlayerColor;
         Dimension = Dimension_XandY;
-        
         Construct();
     }
 

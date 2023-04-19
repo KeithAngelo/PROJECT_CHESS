@@ -36,7 +36,7 @@ enum PieceType{
 }
 
 interface PieceActions {
-    public ArrayList<ChessCoor> GetPotentialMoves(ChessCoor CurrentCoorm, PieceColor color);
-    public boolean AllowedToMoveTo(ChessBoard CurrentBoard, ChessCoor newCoor);
+    public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord);
+    public boolean AllowedToMoveTo(ChessBoard CurrentBoard, ChessCoor CurrentCoord, ChessCoor newCoor);
 }
 

@@ -1,4 +1,7 @@
 package Chess.Util;
+
+import java.util.ArrayList;
+
 public class ChessCoor {
     int X;
     int Y;
@@ -20,6 +23,19 @@ public class ChessCoor {
 
     public int getY(){
         return Y;
+    }
+
+    public boolean equals(ChessCoor coor){
+        return (coor.getX() == X)  && (coor.getY() == Y);
+    }
+
+    public boolean isContainedIn(ArrayList<ChessCoor> listOfCoor){
+        for(ChessCoor thisCoor : listOfCoor){
+            if(thisCoor.equals(this)){
+                return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -17,7 +17,7 @@ public class ChessBoard {
     }
 
 
-    ChessPiece[][] board = new ChessPiece[8][8];
+    public ChessPiece[][] board = new ChessPiece[8][8];
     
     ChessBoard(){
         SetToDefaultPosition();
@@ -78,16 +78,23 @@ public class ChessBoard {
 
     public boolean Move(ChessCoor initialCoor, ChessCoor NewCoor){
         //Check if there is no piece at the specified coordinate
-        if(board[initialCoor.getX()][initialCoor.getY()] == null){
+
+        ChessPiece currentPiece = board[initialCoor.getX()][initialCoor.getY()] ;
+
+        if(currentPiece == null){
             return false;
         }
 
         //Only moves when it is the right turn
-        if(board[initialCoor.getX()][initialCoor.getY()].getColor() != TurnColor){
+        if(currentPiece.getColor() != TurnColor){
             return false;
         }
 
         //TODO : Add Precaution and stop Illegal Moves
+
+        if(!(currentPiece.AllowedToMoveTo(this, initialCoor, NewCoor))){
+            return false;
+        }
 
         
         //Actual Moving
