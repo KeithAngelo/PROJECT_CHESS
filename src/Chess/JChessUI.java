@@ -144,6 +144,7 @@ public class JChessUI extends JPanel{
     }
 
    
+    private WinEvent JCHessWinEvent;
     
 
     public JChessUI(int Dimension_XandY){
@@ -161,9 +162,19 @@ public class JChessUI extends JPanel{
 
         ChessGame.addWinEvent( () -> {
 
-            // TODO : IMPLEMENT A WIN EVENT
+            // TODO : IMPLEMENT A WIN EVENT (in the context of this class)
 
-            System.out.println("Congrats, Someone Won!!"); //PlaceHolder win event
+
+
+
+
+
+
+
+            //Inversion of control, win event if ever there should be any actions outside the Chess Package
+            if(JCHessWinEvent != null){
+                JCHessWinEvent.doWinEvent();
+            }
 
         });
 
@@ -213,5 +224,9 @@ public class JChessUI extends JPanel{
         ChessGame.ResetGame();
         SelectedSquare = null;
         LoadElements();
+    }
+
+    public void addWinEvent(WinEvent winEvent){
+        this.JCHessWinEvent = winEvent;
     }
 }
