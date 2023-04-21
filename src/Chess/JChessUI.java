@@ -196,8 +196,8 @@ public class JChessUI extends JPanel{
         this.revalidate();
     }
 
-    public void Revert(int steps){
-        ChessGame.Revert(steps);
+    public void Revert(){
+        ChessGame.Revert();
         LoadElements();
     }   
 

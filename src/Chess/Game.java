@@ -1,15 +1,17 @@
 package Chess;
 
-import java.util.LinkedList;
+import java.util.Stack;
 
 import Chess.Util.ChessCoor;
+
+//TODO : REMOVE THIS MIDDLE MAN CLASS
 
 public class Game {
     //TODO : Implement a Chess game, where this will store all data related to a occuring chess game
     //THIS WILL ENCAPSULATE A WHOLE GAME. AND WILL ONLY ALLOW MOVES THROUGH THIS CLASS
 
-    LinkedList<ChessBoard> BoardHistory = new LinkedList<>();
-    //Use the "Push" and "Pop" functions so that it will act like a stack
+    Stack<ChessBoard> BoardHistory = new Stack<>();
+
 
     ChessBoard currentBoard = new ChessBoard();
 
@@ -27,16 +29,9 @@ public class Game {
         return false;
     }
 
-    public boolean Revert(int steps){
+    public boolean Revert(){
 
-        //TODO : Debug ; Find out why this does not work
-        try{
-            currentBoard = BoardHistory.get(steps);
-            BoardHistory.removeFirst();
-            return true;
-        }catch(Exception e){
-            return false;
-        }
+        return currentBoard.Revert();
     }
 
     public boolean ResetGame(){

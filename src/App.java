@@ -3,7 +3,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import Chess.*;
 import Chess.JChessUI;
 public class App {
     public static void main(String[] args) throws Exception {
@@ -27,7 +26,7 @@ class myFrame extends JFrame{
         this.add(MyChessGame,BorderLayout.CENTER);
 
         JButton GoBack = new JButton("Undo");
-        GoBack.addActionListener(e -> MyChessGame.ResetGame());
+        GoBack.addActionListener(e -> MyChessGame.Revert());
         GoBack.setPreferredSize(new Dimension(40,40));
         
         this.add(GoBack, BorderLayout.SOUTH);
