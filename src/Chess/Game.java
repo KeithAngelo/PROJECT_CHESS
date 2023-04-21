@@ -2,7 +2,8 @@ package Chess;
 
 import java.util.Stack;
 
-import Chess.Util.ChessCoor;
+import Chess.Util.*;
+
 
 public class Game {
     //TODO : Implement a Chess game, where this will store all data related to a occuring chess game
@@ -11,6 +12,7 @@ public class Game {
     Stack<ChessBoard> BoardHistory = new Stack<>();
 
     WinEvent currentWinEvent;
+    CheckEvent currentCheckEvent;
 
 
     ChessBoard currentBoard = new ChessBoard();
@@ -44,17 +46,20 @@ public class Game {
         this.currentWinEvent = winEvent;
     }
 
+    public void addCheckEvent(CheckEvent checkEvent){
+        this.currentCheckEvent = checkEvent;
+    }
+
     //TODO : Implement when win method should be called in this class.
 
-    public void win(){
+    public void win(PieceColor winner){
         if(currentWinEvent != null){
-            currentWinEvent.doWinEvent();
+            currentWinEvent.doWinEvent(winner);
         }
     }
 
-}
+    public void checkEvent(PieceColor ColorBeingChecked){
+        currentCheckEvent.doCheckEvent(ColorBeingChecked);
+    }
 
-@FunctionalInterface
-interface WinEvent{
-    public void doWinEvent();
 }

@@ -24,8 +24,8 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import Chess.Piece.ChessPiece;
-import Chess.Util.ChessCoor;
-import Chess.Util.PieceColor;
+import Chess.Util.*;
+
 
 public class JChessUI extends JPanel{
 
@@ -160,7 +160,7 @@ public class JChessUI extends JPanel{
 
     private void Construct(){ //Main body of constructor
 
-        ChessGame.addWinEvent( () -> {
+        ChessGame.addWinEvent( ColorOfWinner -> {
 
             // TODO : IMPLEMENT A WIN EVENT (in the context of this class)
 
@@ -170,10 +170,9 @@ public class JChessUI extends JPanel{
 
 
 
-
             //Inversion of control, win event if ever there should be any actions outside the Chess Package
             if(JCHessWinEvent != null){
-                JCHessWinEvent.doWinEvent();
+                JCHessWinEvent.doWinEvent(ColorOfWinner);
             }
 
         });
@@ -228,5 +227,11 @@ public class JChessUI extends JPanel{
 
     public void addWinEvent(WinEvent winEvent){
         this.JCHessWinEvent = winEvent;
+    }
+    
+    //Have not implemented a check event within JChessUI class because I haven't thought of a check event to implement
+    //implement this if ever there is a necessary check event
+    public void addCheckEvent(CheckEvent checkEvent){
+        ChessGame.addCheckEvent(checkEvent);
     }
 }
