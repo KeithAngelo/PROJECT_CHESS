@@ -4,13 +4,13 @@ import java.util.Stack;
 
 import Chess.Util.ChessCoor;
 
-//TODO : REMOVE THIS MIDDLE MAN CLASS
-
 public class Game {
     //TODO : Implement a Chess game, where this will store all data related to a occuring chess game
     //THIS WILL ENCAPSULATE A WHOLE GAME. AND WILL ONLY ALLOW MOVES THROUGH THIS CLASS
 
     Stack<ChessBoard> BoardHistory = new Stack<>();
+
+    WinEvent currentWinEvent;
 
 
     ChessBoard currentBoard = new ChessBoard();
@@ -30,7 +30,6 @@ public class Game {
     }
 
     public boolean Revert(){
-
         return currentBoard.Revert();
     }
 
@@ -41,5 +40,21 @@ public class Game {
         return true;
     }
 
+    public void addWinEvent(WinEvent winEvent){
+        this.currentWinEvent = winEvent;
+    }
+
+    //TODO : Implement when win method should be called in this class.
+
+    public void win(){
+        if(currentWinEvent != null){
+            currentWinEvent.doWinEvent();
+        }
+    }
+
 }
 
+@FunctionalInterface
+interface WinEvent{
+    public void doWinEvent();
+}

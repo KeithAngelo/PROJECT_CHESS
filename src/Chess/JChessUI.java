@@ -159,6 +159,14 @@ public class JChessUI extends JPanel{
 
     private void Construct(){ //Main body of constructor
 
+        ChessGame.addWinEvent( () -> {
+
+            // TODO : IMPLEMENT A WIN EVENT
+
+            System.out.println("Congrats, Someone Won!!"); //PlaceHolder win event
+
+        });
+
         this.setPreferredSize(new java.awt.Dimension(Dimension,Dimension));
         this.setBounds(0, 0, Dimension, Dimension);
         this.setLayout(new GridLayout(GridDimension, GridDimension));
