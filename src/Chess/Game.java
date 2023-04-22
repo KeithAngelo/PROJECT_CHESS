@@ -18,27 +18,34 @@ public class Game {
     ChessBoard currentBoard = new ChessBoard();
 
     Game(){
-        BoardHistory.push(currentBoard);
+        BoardHistory.push(new ChessBoard(currentBoard));
     }
     
 //Implement all public methods of chessboard, but for every update, add to board history
 
     public boolean Move(ChessCoor initialCoor, ChessCoor NewCoor){
         if(currentBoard.Move(initialCoor, NewCoor)){
-            BoardHistory.push(currentBoard);
+            BoardHistory.push(new ChessBoard(currentBoard));
             return true;
         }
         return false;
     }
 
     public boolean Revert(){
-        return currentBoard.Revert();
+        //Still might have bugs, keep out for this
+        if(BoardHistory.size() < 2){
+            return false;
+        }
+        BoardHistory.pop();
+        currentBoard = new ChessBoard(BoardHistory.peek());
+
+        return true;
     }
 
     public boolean ResetGame(){
         currentBoard.SetToDefaultPosition();
         BoardHistory.clear();
-        BoardHistory.push(currentBoard);
+        BoardHistory.push(new ChessBoard(currentBoard));
         return true;
     }
 

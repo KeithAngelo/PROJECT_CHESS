@@ -21,32 +21,27 @@ public class ChessBoard {
 
     public ChessPiece[][] board = new ChessPiece[8][8];
 
-    Stack<ChessPiece[][]> boardHistory = new Stack<>();
-
-    public boolean Revert(){
-        /*
-            This is kinda sketchy, board history only contains the array of pieces, nothing else
-            turnColor is not coupled to it, and could have issues when the board history is empty
-        */
-        try{
-            board = boardHistory.pop();
-            NextTurn();
-            return true;
-        }catch(Exception e){
-            return false;
-        }
-    }
-
     
     ChessBoard(){
         SetToDefaultPosition();
-        addToHistory();
+    }
+
+
+    //Constructor for copying data of another chessBoard
+    ChessBoard(ChessBoard copyChessBoard){
+
+        for(int X = 0; X < 8; X++){
+            for(int Y = 0; Y < 8; Y++){
+                this.board[X][Y] = copyChessBoard.board[X][Y];
+            }
+        }
+
+        this.TurnColor = copyChessBoard.TurnColor;
+        
     }
 
     public void SetToDefaultPosition(){
         //TODO : FINISH THIS, remember to make empty squares null
-
-        boardHistory.clear();
 
         TurnColor = PieceColor.WHITE;
 
@@ -98,22 +93,11 @@ public class ChessBoard {
         
     }
 
-    private void addToHistory(){
-        ChessPiece[][] newBoard = new ChessPiece[8][8];
-        for(int X = 0; X < 8; X++){
-            for(int Y = 0; Y < 8; Y++){
-                newBoard[X][Y] = board[X][Y];
-            }
-        }
-        boardHistory.add(newBoard);
-    }
 
     public boolean Move(ChessCoor initialCoor, ChessCoor NewCoor){
         //Check if there is no piece at the specified coordinate
 
         ChessPiece currentPiece = board[initialCoor.getX()][initialCoor.getY()] ;
-
-        addToHistory();
 
         if(currentPiece == null){
             return false;
