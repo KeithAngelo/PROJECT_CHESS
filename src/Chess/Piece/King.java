@@ -3,8 +3,8 @@ package Chess.Piece;
 import java.util.ArrayList;
 
 import Chess.ChessBoard;
-import Chess.Util.ChessCoor;
-import Chess.Util.PieceColor;
+import Chess.Util.*;
+
 
 public class King extends ChessPiece{
 
@@ -143,8 +143,11 @@ public class King extends ChessPiece{
     }
 
     public boolean isCheckMated(ChessBoard CurrentBoard, ChessCoor CurrentCoord){
-        // TODO : implement this
-        return false;
+        if(!isChecked(CurrentBoard,CurrentCoord)){
+            return false;
+        }
+
+        return this.GetPotentialMoves(CurrentBoard, CurrentCoord).isEmpty();
     }
 
     @Override

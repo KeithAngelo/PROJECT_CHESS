@@ -3,8 +3,8 @@ package Chess.Piece;
 import java.util.ArrayList;
 
 import Chess.ChessBoard;
-import Chess.Util.ChessCoor;
-import Chess.Util.PieceColor;
+import Chess.Util.*;
+
 
 public class Pawn extends ChessPiece{
 

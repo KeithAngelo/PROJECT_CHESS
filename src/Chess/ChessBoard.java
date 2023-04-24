@@ -1,6 +1,8 @@
 package Chess;
 
 
+import java.rmi.NoSuchObjectException;
+
 import Chess.Piece.*;
 import Chess.Util.*;
 
@@ -129,9 +131,44 @@ public class ChessBoard {
     }
 
     public boolean isCheckMated(){
-        // TODO : finish this
+        // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
-        return false;
+        ChessCoor KingCoors = KingCoords();
+
+        King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
+
+        return CurrentKing.isCheckMated(this, KingCoors);
+    }
+
+    public boolean isChecked(){
+        // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
+
+        ChessCoor KingCoors = KingCoords();
+
+        King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
+
+        return CurrentKing.isChecked(this, KingCoors);
+    }
+
+    private ChessCoor KingCoords(){
+        for(int X = 0; X < 8; X++){
+            for(int Y = 0; Y < 8; Y++){
+                if(board[X][Y] == null){
+                    continue;
+                }
+
+                if(board[X][Y].getColor() != this.TurnColor){
+                    continue;
+                }
+
+                if(board[X][Y].getType() == PieceType.KING){
+                    return new ChessCoor(X, Y);
+                }
+            }
+        }
+        return null;
     }
 
 }
+
+

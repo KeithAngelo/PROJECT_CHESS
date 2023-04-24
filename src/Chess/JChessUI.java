@@ -39,8 +39,11 @@ public class JChessUI extends JPanel{
     Color WhiteSquares = new Color(0xFFFFFF);
     Color DarkSquares = new Color(0x999999);
     Color SelectedBorderColor = new Color(0x008800);
+    Color AllowedMoveBorderColor = new Color(0xfcba03);
 
     private Border SelectedBorder = BorderFactory.createLineBorder(SelectedBorderColor,3);
+    private Border AllowedMoveBorder = BorderFactory.createLineBorder(AllowedMoveBorderColor,2);
+
 
 
     /* 
@@ -71,8 +74,6 @@ public class JChessUI extends JPanel{
             this.XCoor = XCoor;
             this.YCoor = YCoor;
 
-            //TODO : Insert button attrubutes here :
-
 
             //Add border if this button is the selected square
             if(SelectedSquare == null){
@@ -81,6 +82,15 @@ public class JChessUI extends JPanel{
                 if((XCoor == SelectedSquare.getX()) && (YCoor == SelectedSquare.getY())){
                     this.setBorder(SelectedBorder);
                 }
+                //Readability is gone hahahahahahahahahahaah
+                ChessPiece selectedPiece = ChessGame.currentBoard.peekPieceAt(SelectedSquare.getX(), SelectedSquare.getY());
+                ArrayList<ChessCoor> possibleMoves = selectedPiece.GetPotentialMoves(ChessGame.currentBoard, SelectedSquare);
+                ChessCoor myCoor = new ChessCoor(XCoor, YCoor);
+                if(myCoor.isContainedIn(possibleMoves)){
+                    //TODO : Instead Of Border, draw green square in middle
+                    this.setBorder(AllowedMoveBorder);
+                }
+
             }
 
             

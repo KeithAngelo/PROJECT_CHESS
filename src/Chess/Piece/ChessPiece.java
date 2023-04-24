@@ -25,6 +25,10 @@ abstract public class ChessPiece implements PieceActions{
         return color;
     }
 
+    public PieceType getType(){
+        return type;
+    }
+
 
     // REUSABLE UTILITY METHODS : 
 
@@ -50,14 +54,7 @@ abstract public class ChessPiece implements PieceActions{
     }
 }
 
-enum PieceType{
-    PAWN, 
-    KING, 
-    QUEEN, 
-    BISHOP, 
-    ROOK, 
-    KNIGHT;
-}
+
 
 interface PieceActions {
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord);

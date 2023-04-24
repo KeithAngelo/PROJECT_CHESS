@@ -13,7 +13,7 @@ public class App {
 class myFrame extends JFrame{
     myFrame(){
         int Frame_Width = 500;
-        int Frame_Height = 540;
+        int Frame_Height = 580;
         
         this.setResizable(false); 
         this.setSize(Frame_Width,Frame_Height); 
@@ -23,12 +23,20 @@ class myFrame extends JFrame{
         this.setLayout(new BorderLayout());
 
         JChessUI MyChessGame = new JChessUI(500,Chess.Util.PieceColor.WHITE);
+        MyChessGame.addCheckEvent(e -> {
+            JOptionPane.showMessageDialog(new JFrame(), "Check : " + e);
+        });
         this.add(MyChessGame,BorderLayout.CENTER);
 
         JButton GoBack = new JButton("Undo");
         GoBack.addActionListener(e -> MyChessGame.Revert());
         GoBack.setPreferredSize(new Dimension(40,40));
-        
+
+        JButton Reset = new JButton("RESET");
+        Reset.addActionListener(e -> MyChessGame.ResetGame());
+        Reset.setPreferredSize(new Dimension(40,40));
+
+        this.add(Reset,BorderLayout.NORTH);
         this.add(GoBack, BorderLayout.SOUTH);
         this.setVisible(true);
     }
