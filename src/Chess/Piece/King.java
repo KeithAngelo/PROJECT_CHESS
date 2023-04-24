@@ -20,11 +20,9 @@ public class King extends ChessPiece{
         ArrayList<ChessCoor> NormMoves = NormalMoves(CurrentBoard, CurrentCoord);
 
         for(ChessCoor currNormalMoves : NormMoves){
-            // ArrayList<ChessCoor> EnemMoves = getEnemySquares(CurrentBoard);
-            // if(currNormalMoves.isContainedIn(EnemMoves)){
-            //     continue;
-            // }
-            PotentialCoords.add(currNormalMoves);
+            if(!(currNormalMoves.isContainedIn(getEnemySquares(CurrentBoard)))){
+                PotentialCoords.add(currNormalMoves);
+            }
         }
 
         return PotentialCoords;
@@ -106,22 +104,8 @@ public class King extends ChessPiece{
         return NormalMoves;
     }
 
-    //This method only checks if the square is outside the board, or if the square contains piece with same color
-    private boolean isValidSquare(ChessBoard currentBoard, int CoorX, int CoorY){
-        if((CoorX < 0 || CoorY < 0) || (CoorX > 7 || CoorY > 7)){
-            return false;
-        }
+    
 
-        if(currentBoard.peekPieceAt(CoorX, CoorY) == null){
-            return true;
-        }
-
-        if(currentBoard.peekPieceAt(CoorX, CoorY).getColor() == this.color){
-            return false;
-        }
-
-        return true;
-    }
 
 
     /* This will get coordinates where the enemy controls the squares.
@@ -136,14 +120,14 @@ public class King extends ChessPiece{
                 ChessPiece currentPiece = CurrentBoard.board[X][Y];
 
                 if(currentPiece == null){
-                    break;
+                    continue;
                 }
 
                 if(currentPiece.getColor() == this.color){
-                    break;
+                    continue;
                 }
 
-                for(ChessCoor EnemySquareCoor : currentPiece.GetPotentialMoves(CurrentBoard, new ChessCoor(X, Y))){
+                for(ChessCoor EnemySquareCoor : currentPiece.GetControlledSquares(CurrentBoard, new ChessCoor(X, Y))){
                     EnemySquares.add(EnemySquareCoor);
                 }
                 
@@ -161,6 +145,75 @@ public class King extends ChessPiece{
     public boolean isCheckMated(ChessBoard CurrentBoard, ChessCoor CurrentCoord){
         // TODO : implement this
         return false;
+    }
+
+    @Override
+    public ArrayList<ChessCoor> GetControlledSquares(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
+        ArrayList<ChessCoor> NormalMoves = new ArrayList<>();
+
+         //EAST
+         int testCoordX = CurrentCoord.getX() + 1;
+         int testCoordY = CurrentCoord.getY() ;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+ 
+         //WEST
+         testCoordX = CurrentCoord.getX() - 1;
+         testCoordY = CurrentCoord.getY() ;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+         //NORTH
+         testCoordX = CurrentCoord.getX() ;
+         testCoordY = CurrentCoord.getY() - 1;
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+ 
+         //SOUTH
+         testCoordX = CurrentCoord.getX() ;
+         testCoordY = CurrentCoord.getY() + 1;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+ 
+         //SOUTHEAST
+         testCoordX = CurrentCoord.getX() + 1;
+         testCoordY = CurrentCoord.getY() + 1;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+ 
+         //SOUTHWEST
+         testCoordX = CurrentCoord.getX() + 1;
+         testCoordY = CurrentCoord.getY() - 1;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+ 
+         //NORTHWEST
+         testCoordX = CurrentCoord.getX() - 1;
+         testCoordY = CurrentCoord.getY() - 1;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+             NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+         }
+ 
+         //NORTHEAST
+         testCoordX = CurrentCoord.getX() - 1;
+         testCoordY = CurrentCoord.getY() + 1;
+ 
+         if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+            NormalMoves.add(new ChessCoor(testCoordX, testCoordY));
+        }
+
+        return NormalMoves;
     }
 
 

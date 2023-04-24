@@ -81,5 +81,33 @@ public class Pawn extends ChessPiece{
     public boolean AllowedToMoveTo(ChessBoard CurrentBoard, ChessCoor CurrentCoord, ChessCoor newCoor) {
         return newCoor.isContainedIn(GetPotentialMoves(CurrentBoard, CurrentCoord));
     }
+
+    @Override
+    public ArrayList<ChessCoor> GetControlledSquares(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
+        ArrayList<ChessCoor> PotentialCoords = new ArrayList<>();
+
+        
+        int direction = 1;
+        if(this.color == PieceColor.WHITE){
+            direction = -1;
+        }
+
+        //EAT THE SIDES
+        int testCoordX = CurrentCoord.getX() + 1;
+        int testCoordY = CurrentCoord.getY() + (1 * direction);
+
+        if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+            PotentialCoords.add(new ChessCoor(testCoordX, testCoordY));
+        }
+
+        testCoordX = CurrentCoord.getX() - 1;
+        testCoordY = CurrentCoord.getY() + (1 * direction);
+
+        if(isWithinBounds(CurrentBoard, testCoordX, testCoordY)){
+            PotentialCoords.add(new ChessCoor(testCoordX, testCoordY));
+        }
+
+        return PotentialCoords;
+    }
     
 }

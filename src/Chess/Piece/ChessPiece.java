@@ -24,6 +24,30 @@ abstract public class ChessPiece implements PieceActions{
     public PieceColor getColor(){
         return color;
     }
+
+
+    // REUSABLE UTILITY METHODS : 
+
+    //This method only checks if the square is outside the board, or if the square contains piece with same color
+    boolean isValidSquare(ChessBoard currentBoard, int CoorX, int CoorY){
+        if((CoorX < 0 || CoorY < 0) || (CoorX > 7 || CoorY > 7)){
+            return false;
+        }
+
+        if(currentBoard.peekPieceAt(CoorX, CoorY) == null){
+            return true;
+        }
+
+        if(currentBoard.peekPieceAt(CoorX, CoorY).getColor() == this.color){
+            return false;
+        }
+
+        return true;
+    }
+
+    boolean isWithinBounds(ChessBoard currentBoard, int CoorX, int CoorY){
+        return !( (CoorX < 0 || CoorY < 0) || (CoorX > 7 || CoorY > 7) );
+    }
 }
 
 enum PieceType{
@@ -37,6 +61,7 @@ enum PieceType{
 
 interface PieceActions {
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord);
+    public ArrayList<ChessCoor> GetControlledSquares(ChessBoard CurrentBoard, ChessCoor CurrentCoord);
     public boolean AllowedToMoveTo(ChessBoard CurrentBoard, ChessCoor CurrentCoord, ChessCoor newCoor);
 }
 
