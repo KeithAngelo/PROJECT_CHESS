@@ -12,30 +12,37 @@ public class App {
 
 class myFrame extends JFrame{
     myFrame(){
-        int Frame_Width = 500;
-        int Frame_Height = 580;
+        // Frame Settings
+        final int FRAME_WIDTH = 500;
+        final int FRAME_HEIGHT = 580;
+
+        final int WIDTH = FRAME_WIDTH / 40;
+        final int HEIGHT = FRAME_HEIGHT / 40;
         
         this.setResizable(false); 
-        this.setSize(Frame_Width,Frame_Height); 
+        this.setSize(FRAME_WIDTH,FRAME_HEIGHT); 
         this.setTitle("Game");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
 
+        // Create Chess Board
         JChessUI MyChessGame = new JChessUI(500,Chess.Util.PieceColor.WHITE);
         MyChessGame.addCheckEvent(e -> {
             JOptionPane.showMessageDialog(new JFrame(), "Check : " + e);
         });
         this.add(MyChessGame,BorderLayout.CENTER);
 
+        // Create Undo Button at the bottom
         JButton GoBack = new JButton("Undo");
         GoBack.addActionListener(e -> MyChessGame.Revert());
-        GoBack.setPreferredSize(new Dimension(40,40));
+        GoBack.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 
+        // Create Reset Button at the top
         JButton Reset = new JButton("RESET");
         Reset.addActionListener(e -> MyChessGame.ResetGame());
-        Reset.setPreferredSize(new Dimension(40,40));
-
+        Reset.setPreferredSize(new Dimension(WIDTH,HEIGHT));
+        
         this.add(Reset,BorderLayout.NORTH);
         this.add(GoBack, BorderLayout.SOUTH);
         this.setVisible(true);
