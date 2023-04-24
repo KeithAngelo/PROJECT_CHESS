@@ -83,7 +83,7 @@ public class Knight extends ChessPiece{
     }
 
     //This method only checks if the square is outside the board, or if the square contains piece with same color
-    public boolean isValidSquare(ChessBoard currentBoard, int CoorX, int CoorY){
+    private boolean isValidSquare(ChessBoard currentBoard, int CoorX, int CoorY){
         if((CoorX < 0 || CoorY < 0) || (CoorX > 7 || CoorY > 7)){
             return false;
         }
