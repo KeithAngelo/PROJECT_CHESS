@@ -115,6 +115,12 @@ public class ChessBoard {
             return false;
         }
 
+        //cant move if the next move will be a check to itself
+        boolean Checked = peekAtFuture(initialCoor, NewCoor).selfIsChecked();
+        if(Checked){
+            return false;
+        }
+        
         
         //Actual Moving
         board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
@@ -126,6 +132,36 @@ public class ChessBoard {
         return true;
     }
 
+
+    //returns a chessboard to peek at what will happen if the move will occur
+    private ChessBoard peekAtFuture(ChessCoor initialCoor, ChessCoor NewCoor){
+        ChessBoard futureBoard = new ChessBoard(this);
+
+        ChessPiece currentPiece = futureBoard.board[initialCoor.getX()][initialCoor.getY()] ;
+
+        if(currentPiece == null){
+            return futureBoard;
+        }
+
+        //Only moves when it is the right turn
+        if(currentPiece.getColor() != TurnColor){
+            return futureBoard;
+        }
+
+        //TODO : Add Precaution and stop Illegal Moves
+
+        if(!(currentPiece.AllowedToMoveTo(this, initialCoor, NewCoor))){
+            return futureBoard;
+        }
+
+        futureBoard.board[NewCoor.getX()][NewCoor.getY()] = futureBoard.board[initialCoor.getX()][initialCoor.getY()];
+        futureBoard.board[initialCoor.getX()][initialCoor.getY()] = null;
+
+        futureBoard.NextTurn();
+
+        return futureBoard;
+    }
+
     public ChessPiece peekPieceAt(int CoorX, int CoorY){
         return board[CoorX][CoorY];  
     }
@@ -133,7 +169,7 @@ public class ChessBoard {
     public boolean isCheckMated(){
         // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
-        ChessCoor KingCoors = KingCoords();
+        ChessCoor KingCoors = KingCoords()[0];
 
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
@@ -143,14 +179,27 @@ public class ChessBoard {
     public boolean isChecked(){
         // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
-        ChessCoor KingCoors = KingCoords();
+        ChessCoor KingCoors = KingCoords()[0];
 
+        King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
+
+        ChessCoor OtherKingCoors = KingCoords()[1];
+
+        King OtherCurrentKing = (King) board[OtherKingCoors.getX()][OtherKingCoors.getY()];
+
+        return CurrentKing.isChecked(this, KingCoors) || OtherCurrentKing.isChecked(this, OtherKingCoors);
+    }
+
+    public boolean selfIsChecked(){
+        ChessCoor KingCoors = KingCoords()[1];
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
         return CurrentKing.isChecked(this, KingCoors);
     }
 
-    private ChessCoor KingCoords(){
+    //returns an array with 2 coordinates of the two kings
+    private ChessCoor[] KingCoords(){
+        ChessCoor[] pairOfKingCoords = new ChessCoor[2];
         for(int X = 0; X < 8; X++){
             for(int Y = 0; Y < 8; Y++){
                 if(board[X][Y] == null){
@@ -162,12 +211,31 @@ public class ChessBoard {
                 }
 
                 if(board[X][Y].getType() == PieceType.KING){
-                    return new ChessCoor(X, Y);
+                    pairOfKingCoords[0] = new ChessCoor(X, Y);
                 }
             }
         }
-        return null;
+
+        for(int X = 0; X < 8; X++){
+            for(int Y = 0; Y < 8; Y++){
+                if(board[X][Y] == null){
+                    continue;
+                }
+
+                if(board[X][Y].getColor() == this.TurnColor){
+                    continue;
+                }
+
+                if(board[X][Y].getType() == PieceType.KING){
+                    pairOfKingCoords[1] = new ChessCoor(X, Y);
+                }
+            }
+        }
+
+        return pairOfKingCoords;
     }
+
+    
 
 }
 
