@@ -1,6 +1,5 @@
 package Chess;
 
-import java.util.Stack;
 
 import Chess.Piece.*;
 import Chess.Util.*;
@@ -123,6 +122,10 @@ public class ChessBoard {
         NextTurn();
 
         return true;
+    }
+
+    public ChessPiece peekPieceAt(int CoorX, int CoorY){
+        return board[CoorX][CoorY];  
     }
 
     public boolean isCheckMated(){

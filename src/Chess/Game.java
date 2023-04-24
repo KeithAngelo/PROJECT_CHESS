@@ -2,6 +2,7 @@ package Chess;
 
 import java.util.Stack;
 
+import Chess.Piece.ChessPiece;
 import Chess.Util.*;
 
 
@@ -47,6 +48,14 @@ public class Game {
         BoardHistory.clear();
         BoardHistory.push(new ChessBoard(currentBoard));
         return true;
+    }
+
+    public ChessPiece peekChessPieceAt(int x, int y){
+        return currentBoard.board[x][y];
+    }
+
+    public PieceColor getCurrentTurn(){
+        return currentBoard.TurnColor;
     }
 
     public void addWinEvent(WinEvent winEvent){

@@ -64,9 +64,9 @@ public class JChessUI extends JPanel{
    
         ChessSquare(int XCoor, int YCoor){
             //Piece inside the ChessSquare
-            ChessPiece currentPiece = ChessGame.currentBoard.board[XCoor][YCoor];
+            ChessPiece currentPiece = ChessGame.peekChessPieceAt(XCoor, YCoor);
 
-            PieceColor CurrentTurn = ChessGame.currentBoard.TurnColor;
+            PieceColor CurrentTurn = ChessGame.getCurrentTurn();
 
             this.XCoor = XCoor;
             this.YCoor = YCoor;
