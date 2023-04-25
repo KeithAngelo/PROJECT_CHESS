@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import Chess.JChessUI;
+import Chess.Util.PieceColor;
 public class App {
     public static void main(String[] args) throws Exception {
         new myFrame();
@@ -11,6 +12,8 @@ public class App {
 }
 
 class myFrame extends JFrame{
+    String Black_Player_Name = "Keith";
+    String White_Player_Name = "Raymund";
     myFrame(){
         // Frame Settings
         final int FRAME_WIDTH = 500;
@@ -29,11 +32,24 @@ class myFrame extends JFrame{
         // Create Chess Board
         JChessUI MyChessGame = new JChessUI(500,Chess.Util.PieceColor.WHITE);
         MyChessGame.addCheckEvent(e -> {
+
             JOptionPane.showMessageDialog(new JFrame(), "Check : " + e);
         });
         this.add(MyChessGame,BorderLayout.CENTER);
 
-        MyChessGame.addWinEvent(e -> JOptionPane.showMessageDialog(new JFrame(), "CheckMate : " + e));
+        MyChessGame.addWinEvent(e -> {
+            
+            String NameOfWinner = "";
+
+            if(e == PieceColor.WHITE){
+                NameOfWinner = Black_Player_Name;
+            }else{
+                NameOfWinner = White_Player_Name;
+            }
+            JOptionPane.showMessageDialog(new JFrame(), "CheckMate : " + NameOfWinner);
+        
+        
+        });
 
         // Create Undo Button at the bottom
         JButton GoBack = new JButton("Undo");

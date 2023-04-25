@@ -61,7 +61,7 @@ public class JChessUI extends JPanel{
     
     private ChessSquare[][] ChessGrid = new ChessSquare[GridDimension][GridDimension]; 
 
-    class ChessSquare extends JButton{
+    class ChessSquare extends JButton{  
         final int XCoor;
         final int YCoor;
    

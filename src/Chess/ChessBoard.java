@@ -243,7 +243,15 @@ public class ChessBoard {
         return pairOfKingCoords;
     }
 
-    
+
+
+    public boolean canShortCastle(){
+        return false;
+    }
+
+    public boolean canLongCastle(){
+        return false;
+    }
 
 }
 
