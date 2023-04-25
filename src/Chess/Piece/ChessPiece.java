@@ -1,6 +1,7 @@
 package Chess.Piece;
 import Chess.Util.*;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -17,8 +18,13 @@ abstract public class ChessPiece implements PieceActions{
     }
 
     public ImageIcon getImg(){
-        //CUSTOM FILEPATH NAME, NEED TO EDIT THE NAME BASED ON THIS ENUMS
-        return new ImageIcon("Media\\"+ type +"_"+color + ".png");
+        // CUSTOM FILEPATH NAME, NEED TO EDIT THE NAME BASED ON THIS ENUMS
+        
+        // give current path of the file
+        String currentPath = System.getProperty("user.dir");
+        String PIECE_PATH = currentPath + "\\PROJECT_CHESS\\Media\\" + type + "_" + color + ".png";
+        System.out.println(PIECE_PATH);
+        return new ImageIcon(PIECE_PATH);
     }
 
     public PieceColor getColor(){
