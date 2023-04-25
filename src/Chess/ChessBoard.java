@@ -29,7 +29,7 @@ public class ChessBoard {
 
 
     //Constructor for copying data of another chessBoard
-    ChessBoard(ChessBoard copyChessBoard){
+    public ChessBoard(ChessBoard copyChessBoard){
 
         for(int X = 0; X < 8; X++){
             for(int Y = 0; Y < 8; Y++){
@@ -134,7 +134,7 @@ public class ChessBoard {
 
 
     //returns a chessboard to peek at what will happen if the move will occur
-    private ChessBoard peekAtFuture(ChessCoor initialCoor, ChessCoor NewCoor){
+    public ChessBoard peekAtFuture(ChessCoor initialCoor, ChessCoor NewCoor){
         ChessBoard futureBoard = new ChessBoard(this);
 
         ChessPiece currentPiece = futureBoard.board[initialCoor.getX()][initialCoor.getY()] ;
@@ -150,9 +150,9 @@ public class ChessBoard {
 
         //TODO : Add Precaution and stop Illegal Moves
 
-        if(!(currentPiece.AllowedToMoveTo(this, initialCoor, NewCoor))){
-            return futureBoard;
-        }
+        // if(!(currentPiece.AllowedToMoveTo(this, initialCoor, NewCoor))){
+        //     return futureBoard;
+        // }
 
         futureBoard.board[NewCoor.getX()][NewCoor.getY()] = futureBoard.board[initialCoor.getX()][initialCoor.getY()];
         futureBoard.board[initialCoor.getX()][initialCoor.getY()] = null;
@@ -173,7 +173,11 @@ public class ChessBoard {
 
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
-        return CurrentKing.isCheckMated(this, KingCoors);
+        ChessCoor OtherKingCoors = KingCoords()[1];
+
+        King OtherCurrentKing = (King) board[OtherKingCoors.getX()][OtherKingCoors.getY()];
+
+        return CurrentKing.isCheckMated(this, KingCoors) || OtherCurrentKing.isCheckMated(this, OtherKingCoors);
     }
 
     public boolean isChecked(){
@@ -191,7 +195,7 @@ public class ChessBoard {
     }
 
     public boolean selfIsChecked(){
-        ChessCoor KingCoors = KingCoords()[1];
+            ChessCoor KingCoors = KingCoords()[1];
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
         return CurrentKing.isChecked(this, KingCoors);
@@ -212,6 +216,8 @@ public class ChessBoard {
 
                 if(board[X][Y].getType() == PieceType.KING){
                     pairOfKingCoords[0] = new ChessCoor(X, Y);
+                    X = 8;
+                    break;
                 }
             }
         }
@@ -228,6 +234,8 @@ public class ChessBoard {
 
                 if(board[X][Y].getType() == PieceType.KING){
                     pairOfKingCoords[1] = new ChessCoor(X, Y);
+                    X = 8;
+                    break;
                 }
             }
         }

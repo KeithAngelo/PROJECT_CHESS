@@ -142,12 +142,42 @@ public class King extends ChessPiece{
         return CurrentCoord.isContainedIn(getEnemySquares(CurrentBoard));
     }
 
+
+    // TODO : NEED TO CHECK EVERY POSSIBILITY IF IT REALLY IS CHECKMATE
     public boolean isCheckMated(ChessBoard CurrentBoard, ChessCoor CurrentCoord){
         if(!isChecked(CurrentBoard,CurrentCoord)){
             return false;
         }
 
-        return this.GetPotentialMoves(CurrentBoard, CurrentCoord).isEmpty();
+        //Check if there are no longer valid moves possible for all pieces on the board :
+        for(int Y = 0; Y < 8; Y++){
+            for(int X = 0; X < 8; X ++){
+
+                ChessBoard TestBoard = new ChessBoard(CurrentBoard);
+                ChessPiece CurrentPiece = TestBoard.peekPieceAt(X, Y);
+
+                if(CurrentPiece == null){
+                    continue;
+                }
+
+                if(CurrentPiece.getColor() != this.color){
+                    continue;
+                }
+
+                ArrayList<ChessCoor> PossibleMoves = CurrentPiece.GetPotentialMoves(CurrentBoard, new ChessCoor(X, Y));
+
+                for(ChessCoor testCoor : PossibleMoves){
+                    ChessBoard tempBoard = new ChessBoard(TestBoard);
+                    if(tempBoard.Move(new ChessCoor(X, Y), testCoor)){
+                        return false;
+                    }
+                }   
+
+            }
+        }
+
+
+        return true;
     }
 
     @Override

@@ -33,6 +33,8 @@ class myFrame extends JFrame{
         });
         this.add(MyChessGame,BorderLayout.CENTER);
 
+        MyChessGame.addWinEvent(e -> JOptionPane.showMessageDialog(new JFrame(), "CheckMate : " + e));
+
         // Create Undo Button at the bottom
         JButton GoBack = new JButton("Undo");
         GoBack.addActionListener(e -> MyChessGame.Revert());

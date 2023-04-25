@@ -36,7 +36,7 @@ public class Queen extends ChessPiece{
             if(blocked){
                 break;
             }
-
+            
             if(CurrentBoard.board[testCoorX][testCoorY] == null){
                 PotentialCoords.add(new ChessCoor(testCoorX, testCoorY));
                 continue;
@@ -211,6 +211,7 @@ public class Queen extends ChessPiece{
                 PotentialCoords.add(new ChessCoor(testCoorX, testCoorY));
                 continue;
             }
+
 
             if(CurrentBoard.board[testCoorX][testCoorY].getColor() == this.color){
                 blocked = true;

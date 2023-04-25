@@ -27,9 +27,18 @@ public class Game {
     public boolean Move(ChessCoor initialCoor, ChessCoor NewCoor){
         if(currentBoard.Move(initialCoor, NewCoor)){
             BoardHistory.push(new ChessBoard(currentBoard));
-            if(currentBoard.isChecked()){
-                checkEvent(PieceColor.WHITE);
-            }
+
+                if(currentBoard.isCheckMated()){
+                    win(getCurrentTurn());
+                    return true;
+                }
+
+                if(currentBoard.isChecked()){
+                    checkEvent(getCurrentTurn());
+                    return true;
+                }
+
+            
             return true;
         }
         return false;
