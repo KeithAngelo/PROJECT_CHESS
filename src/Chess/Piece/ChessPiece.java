@@ -22,8 +22,8 @@ abstract public class ChessPiece implements PieceActions{
         
         // give current path of the file
         String currentPath = System.getProperty("user.dir");
-        String PIECE_PATH = currentPath + "\\PROJECT_CHESS\\Media\\" + type + "_" + color + ".png";
-        System.out.println(PIECE_PATH);
+        String PIECE_PATH = currentPath + "\\Media\\" + type + "_" + color + ".png";
+        // System.out.println(PIECE_PATH);
         return new ImageIcon(PIECE_PATH);
     }
 
