@@ -43,6 +43,10 @@ class myFrame extends JFrame{
         
         });
 
+        MyChessGame.addCaptureEvent(e -> System.out.println("Captured piece is "+e));
+
+        MyChessGame.addMoveEvent(e -> System.out.println(e + " has moved"));
+
         // Create Undo Button at the bottom
         JButton GoBack = new JButton("Undo");
         GoBack.addActionListener(e -> MyChessGame.Revert());

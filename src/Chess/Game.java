@@ -90,4 +90,8 @@ public class Game {
         currentCheckEvent.doCheckEvent(ColorBeingChecked);
     }
 
+    public void addCaptureEvent(CaptureEvent myCapt){
+        currentBoard.addCaptureEvent(myCapt);
+    }
+
 }

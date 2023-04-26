@@ -23,6 +23,8 @@ public class ChessBoard {
 
     public ChessPiece[][] board = new ChessPiece[8][8];
 
+    CaptureEvent myCaptureEvent;
+
     
     ChessBoard(){
         SetToDefaultPosition();
@@ -188,6 +190,14 @@ public class ChessBoard {
 
                 NextTurn();
                 return true;
+            }
+
+            //For capture event dependency injection
+            if(board[NewCoor.getX()][NewCoor.getY()] != null){
+                if(myCaptureEvent != null){
+                    myCaptureEvent.doCaptureEvent(board[NewCoor.getX()][NewCoor.getY()].type);
+                }
+                
             }
             
             
@@ -468,6 +478,10 @@ public class ChessBoard {
         
 
         return true;
+    }
+
+    public void addCaptureEvent(CaptureEvent thisCapture){
+        this.myCaptureEvent = thisCapture;
     }
 
 }

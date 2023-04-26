@@ -44,7 +44,14 @@ public class JChessUI extends JPanel{
     private Border SelectedBorder = BorderFactory.createLineBorder(SelectedBorderColor,3);
     private Border AllowedMoveBorder = BorderFactory.createLineBorder(AllowedMoveBorderColor,2);
 
-
+    
+    
+    
+    //DEPENDENCY INJECTION INTERFACES : 
+    
+    private WinEvent JCHessWinEvent;
+    private MoveEvent myMoveEvent;
+    
 
     /* 
     TODO :
@@ -142,7 +149,10 @@ public class JChessUI extends JPanel{
                     int oldX = SelectedSquare.getX();
                     int oldY = SelectedSquare.getY();
                     if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
-                        
+                        if(myMoveEvent != null){
+                            myMoveEvent.doMoveEvent(CurrentTurn);
+                        }
+
                     }
                     SelectedSquare = null;
                 }
@@ -151,10 +161,12 @@ public class JChessUI extends JPanel{
             }
             );
         }
+        
     }
+    
 
    
-    private WinEvent JCHessWinEvent;
+    
     
 
     public JChessUI(int Dimension_XandY){
@@ -243,5 +255,13 @@ public class JChessUI extends JPanel{
     //implement this if ever there is a necessary check event
     public void addCheckEvent(CheckEvent checkEvent){
         ChessGame.addCheckEvent(checkEvent);
+    }
+
+    public void addCaptureEvent(CaptureEvent thisCapture){
+        ChessGame.addCaptureEvent(thisCapture);
+    }
+
+    public void addMoveEvent(MoveEvent thisMove){
+        this.myMoveEvent = thisMove;
     }
 }
