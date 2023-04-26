@@ -1,7 +1,7 @@
 package Chess.Piece;
 import Chess.Util.*;
 
-import java.io.File;
+
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;

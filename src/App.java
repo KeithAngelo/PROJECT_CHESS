@@ -63,6 +63,6 @@ class myFrame extends JFrame{
         
         this.add(Reset,BorderLayout.NORTH);
         this.add(GoBack, BorderLayout.SOUTH);
-        this.setVisible(true);
+        this.setVisible(true); //This Change
     }
 }
