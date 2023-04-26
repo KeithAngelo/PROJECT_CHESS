@@ -11,10 +11,17 @@ import Chess.*;
 
 abstract public class ChessPiece implements PieceActions{
     final PieceColor color;
-    PieceType type;
+    public PieceType type;
+    public boolean hasMoved = false;
 
     public ChessPiece(PieceColor color){
         this.color = color;
+    }
+
+    public ChessPiece(ChessPiece newPiece){
+        this.color = newPiece.color;
+        this.type = newPiece.type;
+        this.hasMoved = newPiece.hasMoved;
     }
 
     public ImageIcon getImg(){
@@ -33,6 +40,15 @@ abstract public class ChessPiece implements PieceActions{
 
     public PieceType getType(){
         return type;
+    }
+
+    public boolean move(moveInterface myMove,ChessCoor initialCoor, ChessCoor NewCoor ){
+        if(myMove.move(initialCoor, NewCoor)){
+            hasMoved = true;
+            return true;
+        }
+
+        return false;
     }
 
 

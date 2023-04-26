@@ -13,6 +13,10 @@ public class Pawn extends ChessPiece{
         type = PieceType.PAWN;
     }
 
+    public Pawn(ChessPiece newPiece){
+        super(newPiece);
+    }
+
     @Override
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         ArrayList<ChessCoor> PotentialCoords = new ArrayList<>();

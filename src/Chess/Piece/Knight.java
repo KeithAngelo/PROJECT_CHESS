@@ -13,6 +13,10 @@ public class Knight extends ChessPiece{
         type = PieceType.KNIGHT;
     }
 
+    public Knight(ChessPiece newPiece){
+        super(newPiece);
+    }
+
     @Override
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         ArrayList<ChessCoor> PotentialCoords = new ArrayList<>();

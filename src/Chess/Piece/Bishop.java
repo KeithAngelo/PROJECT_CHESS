@@ -13,6 +13,10 @@ public class Bishop extends ChessPiece{
         type = PieceType.BISHOP;
     }
 
+    public Bishop(ChessPiece newPiece){
+        super(newPiece);
+    }
+
     @Override
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         ArrayList<ChessCoor> PotentialCoords = new ArrayList<>();

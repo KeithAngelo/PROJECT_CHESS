@@ -13,6 +13,10 @@ public class Rook extends ChessPiece{
         type = PieceType.ROOK;
     }
 
+    public Rook(ChessPiece newPiece){
+        super(newPiece);
+    }
+
     @Override
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         ArrayList<ChessCoor> PotentialCoords = new ArrayList<>();

@@ -13,6 +13,10 @@ public class King extends ChessPiece{
         type = PieceType.KING;
     }
 
+    public King(ChessPiece newPiece){
+        super(newPiece);
+    }
+
     @Override
     public ArrayList<ChessCoor> GetPotentialMoves(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         ArrayList<ChessCoor> PotentialCoords = new ArrayList<>();
@@ -23,6 +27,24 @@ public class King extends ChessPiece{
             if(!(currNormalMoves.isContainedIn(getEnemySquares(CurrentBoard)))){
                 PotentialCoords.add(currNormalMoves);
             }
+        }
+
+
+        int YCoor;
+        if(CurrentBoard.TurnColor == PieceColor.WHITE){
+            YCoor = 7;
+        }else{
+            YCoor = 0;
+        }
+
+        if(CurrentBoard.canLongCastle()){
+            PotentialCoords.add(new ChessCoor(2, YCoor));
+            // System.out.println("Longcast");
+        }
+
+        if(CurrentBoard.canShortCastle()){
+            PotentialCoords.add(new ChessCoor(6, YCoor));
+            // System.out.println("Shortcast");
         }
 
         return PotentialCoords;
