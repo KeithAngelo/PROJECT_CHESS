@@ -12,8 +12,6 @@ public class App {
 }
 
 class myFrame extends JFrame{
-    String Black_Player_Name = "Keith";
-    String White_Player_Name = "Raymund";
     myFrame(){
         // Frame Settings
         final int FRAME_WIDTH = 500;
@@ -39,14 +37,8 @@ class myFrame extends JFrame{
 
         MyChessGame.addWinEvent(e -> {
             
-            String NameOfWinner = "";
-
-            if(e == PieceColor.WHITE){
-                NameOfWinner = Black_Player_Name;
-            }else{
-                NameOfWinner = White_Player_Name;
-            }
-            JOptionPane.showMessageDialog(new JFrame(), "CheckMate : " + NameOfWinner);
+ 
+            JOptionPane.showMessageDialog(new JFrame(), "CheckMate : " + e);
         
         
         });
