@@ -26,6 +26,8 @@ public class ChessBoard {
     public ChessPiece[][] board = new ChessPiece[8][8];
 
     CaptureEvent myCaptureEvent;
+    //Default promotion event. this will be changed when addPromotionEvent() is called
+    PromotionEvent myPromotionEvent = CurrentTurn -> new Queen(TurnColor);
 
     
     ChessBoard(){
@@ -207,8 +209,14 @@ public class ChessBoard {
             board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
             board[initialCoor.getX()][initialCoor.getY()] = null;
 
+            //In case a pawn must be promoted
+            ChessCoor PawnPromotion = pawMustBePromoted();
+            if(PawnPromotion != null){
+                board[PawnPromotion.getX()][PawnPromotion.getY()] = myPromotionEvent.doPromotionEvent(TurnColor);
+            }
 
             NextTurn();
+            
 
             return true;
         };
@@ -382,6 +390,26 @@ public class ChessBoard {
         return pairOfKingCoords;
     }
 
+    public ChessCoor pawMustBePromoted(){
+        int YCoorPromote;
+        if(TurnColor == PieceColor.WHITE){
+            YCoorPromote = 0;
+        }else{
+            YCoorPromote = 7;
+        }
+
+        for(int X = 0; X < 8; X++){
+            if(board[X][YCoorPromote] == null){
+                continue;
+            }
+
+            if(board[X][YCoorPromote].getType() == PieceType.PAWN){
+                return new ChessCoor(X, YCoorPromote);
+            }
+        }
+
+        return null;
+    }
 
 
     public boolean canShortCastle(){
@@ -502,6 +530,10 @@ public class ChessBoard {
 
     public void addCaptureEvent(CaptureEvent thisCapture){
         this.myCaptureEvent = thisCapture;
+    }
+
+    public void addPromotionEvent(PromotionEvent thisPromotion){
+        this.myPromotionEvent = thisPromotion;
     }
 
 }

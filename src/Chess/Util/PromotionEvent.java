@@ -8,5 +8,5 @@ import Chess.Piece.ChessPiece;
 // IF there is no added implementation, automatically promote to queen
 
 public interface PromotionEvent {
-    public ChessPiece doPromotionEvent();
+    public ChessPiece doPromotionEvent(PieceColor CurrentTurn);
 }
