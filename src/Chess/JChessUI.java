@@ -90,8 +90,7 @@ public class JChessUI extends JPanel{
                     this.setBorder(SelectedBorder);
                 }
                 //Readability is gone hahahahahahahahahahaah
-                ChessPiece selectedPiece = ChessGame.currentBoard.peekPieceAt(SelectedSquare.getX(), SelectedSquare.getY());
-                ArrayList<ChessCoor> possibleMoves = selectedPiece.GetPotentialMoves(ChessGame.currentBoard, SelectedSquare);
+                ArrayList<ChessCoor> possibleMoves = ChessGame.currentBoard.getAllowedSquaresAt(SelectedSquare);
                 ChessCoor myCoor = new ChessCoor(XCoor, YCoor);
                 if(myCoor.isContainedIn(possibleMoves)){
                     //TODO : Instead Of Border, draw green square in middle

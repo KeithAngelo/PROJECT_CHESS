@@ -2,6 +2,8 @@ package Chess;
 
 
 
+import java.util.ArrayList;
+
 import Chess.Piece.*;
 import Chess.Util.*;
 
@@ -283,6 +285,24 @@ public class ChessBoard {
 
     public ChessPiece peekPieceAt(int CoorX, int CoorY){
         return board[CoorX][CoorY];  
+    }
+
+    public ArrayList<ChessCoor> getAllowedSquaresAt(ChessCoor CoorOfSquare){
+        ArrayList<ChessCoor> AllowedSquares = new ArrayList<>();
+
+        //Very efficient yes
+        for(int Y = 0; Y < 8 ; Y++){
+            for(int X = 0; X < 8; X++){
+                ChessBoard TestBoard = new ChessBoard(this);
+
+                if(TestBoard.Move(CoorOfSquare, new ChessCoor( X,Y))){
+                    AllowedSquares.add(new ChessCoor(X, Y));
+                }
+
+            }
+        }
+
+        return AllowedSquares;
     }
 
     public boolean isCheckMated(){
