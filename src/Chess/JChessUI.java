@@ -161,7 +161,7 @@ public class JChessUI extends JPanel{
                                     botMove = myBot.GenerateMove(ChessGame);
 
                                     if(ChessGame.Move(botMove[0], botMove[1])){
-                                        myMoveEvent.doMoveEvent(CurrentTurn);
+                                        myMoveEvent.doMoveEvent(PieceColor.getOther(CurrentTurn));
                                     }
                                 }
                                 
@@ -265,6 +265,10 @@ public class JChessUI extends JPanel{
 
     public void Revert(){
         ChessGame.Revert();
+        if(AgainstBot){
+            //If playing against bot, you will revert twice
+            ChessGame.Revert();
+        }
         LoadElements();
     }   
 
