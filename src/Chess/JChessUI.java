@@ -46,6 +46,7 @@ public class JChessUI extends JPanel{
 
     
     boolean AgainstBot = false;
+    ChessBot myBot;
     
     //DEPENDENCY INJECTION INTERFACES : 
     
@@ -124,41 +125,70 @@ public class JChessUI extends JPanel{
             //Actions when this button is pressed
             this.addActionListener(e -> {
 
-                boolean makeAmove = false;
+                if(!AgainstBot || ChessGame.getCurrentTurn() == PlayerColor){
 
-                if(currentPiece == null){
-                    makeAmove = SelectedSquare != null;
-                }else{
-                    //Cases for when square should be selected 
-                    if(currentPiece != null && currentPiece.getColor()==CurrentTurn){
-                        SelectedSquare = new ChessCoor(XCoor, YCoor);
-                    }
+                    boolean makeAmove = false;
 
-                
-                    // Cases for when move should be executed
-
-                    if(SelectedSquare != null && !(currentPiece.getColor().equals(CurrentTurn)) ){
-                        //TODO : add more guard clauses if necessarry
-                        makeAmove = true;
-                    }
-                }
-
-
-                if(makeAmove){
-                    int oldX = SelectedSquare.getX();
-                    int oldY = SelectedSquare.getY();
-                    if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
-                        if(myMoveEvent != null){
-                            myMoveEvent.doMoveEvent(CurrentTurn);
+                    if(currentPiece == null){
+                        makeAmove = SelectedSquare != null;
+                    }else{
+                        //Cases for when square should be selected 
+                        if(currentPiece != null && currentPiece.getColor()==CurrentTurn){
+                            SelectedSquare = new ChessCoor(XCoor, YCoor);
                         }
 
+                    
+                        // Cases for when move should be executed
+
+                        if(SelectedSquare != null && !(currentPiece.getColor().equals(CurrentTurn)) ){
+                            //TODO : add more guard clauses if necessarry
+                            makeAmove = true;
+                        }
                     }
-                    SelectedSquare = null;
+
+
+                    if(makeAmove){
+                        int oldX = SelectedSquare.getX();
+                        int oldY = SelectedSquare.getY();
+                        if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
+                            if(myMoveEvent != null){
+                                myMoveEvent.doMoveEvent(CurrentTurn);
+
+                                //Bot Do a move
+
+                                if(AgainstBot){
+                                    ChessCoor[] botMove = new ChessCoor[2];
+                                    botMove = myBot.GenerateMove(ChessGame);
+
+                                    if(ChessGame.Move(botMove[0], botMove[1])){
+                                        myMoveEvent.doMoveEvent(CurrentTurn);
+                                    }
+                                }
+                                
+                            }
+
+                        }
+                        SelectedSquare = null;
+                    }
                 }
 
+                
+                    
+
+                
+
+                    
+
+                
                 LoadElements();
             }
             );
+
+            
+        }
+
+        private void MakeBotMove(){
+                
         }
         
     }
@@ -180,6 +210,12 @@ public class JChessUI extends JPanel{
     }
 
     private void Construct(){ //Main body of constructor
+
+        if(PlayerColor == PieceColor.WHITE){
+            myBot = new ChessBot(PieceColor.BLACK);
+        }else{
+            myBot = new ChessBot(PieceColor.WHITE);
+        }
 
         ChessGame.addWinEvent( ColorOfWinner -> {
 

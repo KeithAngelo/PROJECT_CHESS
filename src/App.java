@@ -29,6 +29,7 @@ class myFrame extends JFrame{
 
         // Create Chess Board
         JChessUI MyChessGame = new JChessUI(500,Chess.Util.PieceColor.WHITE);
+        MyChessGame.playAgainstBot(true);
         MyChessGame.addCheckEvent(e -> {
 
             JOptionPane.showMessageDialog(new JFrame(), "Check : " + e);
