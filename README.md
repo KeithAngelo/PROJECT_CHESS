@@ -13,7 +13,7 @@ To use the chess package, use the following imports
 You can add a chess Game using the *JChessUI* object :
 
 ### The JChessUI object
-A JChessUI Object inhertis the JPanel object from the Java Swing framework. This means all methods that can be used on a JPanel will work in a JChessUI object.
+A JChessUI Object inherits the JPanel object from the Java Swing framework. This means all methods that can be used on a JPanel will work in a JChessUI object.
 
 
 #### Instantiating a JChessUI object
