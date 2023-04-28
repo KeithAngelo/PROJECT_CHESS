@@ -334,10 +334,6 @@ public class ChessBoard {
 
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
-        ChessCoor OtherKingCoors = KingCoords()[1];
-
-        King OtherCurrentKing = (King) board[OtherKingCoors.getX()][OtherKingCoors.getY()];
-
         return CurrentKing.isDraw(this, KingCoors);
     }
 

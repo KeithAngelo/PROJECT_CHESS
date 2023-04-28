@@ -18,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -44,7 +45,8 @@ public class JChessUI extends JPanel{
     private Border SelectedBorder = BorderFactory.createLineBorder(SelectedBorderColor,3);
     private Border AllowedMoveBorder = BorderFactory.createLineBorder(AllowedMoveBorderColor,2);
 
-    
+    boolean GameIsFinished = false;
+
     boolean AgainstBot = false;
     ChessBot myBot;
     
@@ -52,6 +54,7 @@ public class JChessUI extends JPanel{
     
     private WinEvent JCHessWinEvent;
     private MoveEvent myMoveEvent;
+    private DrawEvent myDrawEvent;
     
 
     /* 
@@ -124,7 +127,8 @@ public class JChessUI extends JPanel{
 
             //Actions when this button is pressed
             this.addActionListener(e -> {
-
+                if(!GameIsFinished){
+                    
                 if(!AgainstBot || ChessGame.getCurrentTurn() == PlayerColor){
 
                     boolean makeAmove = false;
@@ -153,42 +157,36 @@ public class JChessUI extends JPanel{
                         if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
                             if(myMoveEvent != null){
                                 myMoveEvent.doMoveEvent(CurrentTurn);
+                            }
+
+                            SelectedSquare = null;
+                            LoadElements();
 
                                 //Bot Do a move
+                            
 
-                                if(AgainstBot){
-                                    ChessCoor[] botMove = new ChessCoor[2];
-                                    botMove = myBot.GenerateMove(ChessGame);
+                            if(AgainstBot && !GameIsFinished){
+                                ChessCoor[] botMove = new ChessCoor[2];
+                                botMove = myBot.GenerateMove(ChessGame);
 
-                                    if(ChessGame.Move(botMove[0], botMove[1])){
-                                        myMoveEvent.doMoveEvent(PieceColor.getOther(CurrentTurn));
+                                if(ChessGame.Move(botMove[0], botMove[1])){
+                                    if(myMoveEvent != null){
+                                        myMoveEvent.doMoveEvent(CurrentTurn);
                                     }
                                 }
-                                
                             }
 
                         }
-                        SelectedSquare = null;
+                        
                     }
                 }
-
-                
-                    
-
-                
-
-                    
-
+                }
                 
                 LoadElements();
             }
             );
 
             
-        }
-
-        private void MakeBotMove(){
-                
         }
         
     }
@@ -211,13 +209,18 @@ public class JChessUI extends JPanel{
 
     private void Construct(){ //Main body of constructor
 
-        if(PlayerColor == PieceColor.WHITE){
-            myBot = new ChessBot(PieceColor.BLACK);
-        }else{
-            myBot = new ChessBot(PieceColor.WHITE);
-        }
+        myBot = new ChessBot(PieceColor.getOther(PlayerColor));
+
+        ChessGame.addDrawEvent(() -> {
+            GameIsFinished = true;
+
+            if(myDrawEvent != null){
+                myDrawEvent.doDrawEvent();
+            }
+        });
 
         ChessGame.addWinEvent( ColorOfWinner -> {
+            GameIsFinished = true;
 
             //Inversion of control, win event if ever there should be any actions outside the Chess Package
             if(JCHessWinEvent != null){
@@ -229,6 +232,9 @@ public class JChessUI extends JPanel{
         this.setPreferredSize(new java.awt.Dimension(Dimension,Dimension));
         this.setBounds(0, 0, Dimension, Dimension);
         this.setLayout(new GridLayout(GridDimension, GridDimension));
+
+
+        
 
         LoadElements();
     }
@@ -275,11 +281,26 @@ public class JChessUI extends JPanel{
     public void ResetGame(){
         ChessGame.ResetGame();
         SelectedSquare = null;
+
+        if(AgainstBot && (PlayerColor == PieceColor.BLACK)){
+            if(AgainstBot && !GameIsFinished){
+                ChessCoor[] botMove = new ChessCoor[2];
+                botMove = myBot.GenerateMove(ChessGame);
+
+                if(ChessGame.Move(botMove[0], botMove[1])){
+                }
+            }
+        }
+
         LoadElements();
     }
 
     public void addWinEvent(WinEvent winEvent){
         this.JCHessWinEvent = winEvent;
+    }
+
+    public void addDrawEvent(DrawEvent thisDraw){
+        this.myDrawEvent = thisDraw;
     }
     
     //Have not implemented a check event within JChessUI class because I haven't thought of a check event to implement
@@ -296,11 +317,21 @@ public class JChessUI extends JPanel{
         this.myMoveEvent = thisMove;
     }
 
-    public void addDrawEvent(DrawEvent thisDraw){
-        ChessGame.addDrawEvent(thisDraw);
-    }
+    
 
     public void playAgainstBot(boolean play){
         this.AgainstBot = play;
+
+        if(AgainstBot && (PlayerColor == PieceColor.BLACK)){
+            if(AgainstBot && !GameIsFinished){
+                ChessCoor[] botMove = new ChessCoor[2];
+                botMove = myBot.GenerateMove(ChessGame);
+
+                if(ChessGame.Move(botMove[0], botMove[1])){
+                }
+            }
+            LoadElements();
+        }
+
     }
 }

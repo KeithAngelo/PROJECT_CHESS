@@ -22,8 +22,15 @@ public class Game {
     Game(){
         BoardHistory.push(new ChessBoard(currentBoard));
     }
+
+    Game(Game newGame){
+        this.currentBoard = new ChessBoard(newGame.currentBoard);
+        for(ChessBoard histBoard : newGame.BoardHistory){
+            this.BoardHistory.add(histBoard);
+        }
+    }
     
-//Implement all public methods of chessboard, but for every update, add to board history
+    //Implement all public methods of chessboard, but for every update, add to board history
 
     public boolean Move(ChessCoor initialCoor, ChessCoor NewCoor){
         if(currentBoard.Move(initialCoor, NewCoor)){
@@ -94,7 +101,10 @@ public class Game {
     }
 
     public void checkEvent(PieceColor ColorBeingChecked){
-        currentCheckEvent.doCheckEvent(ColorBeingChecked);
+        if(currentCheckEvent != null){
+            currentCheckEvent.doCheckEvent(ColorBeingChecked);
+        }
+        
     }
 
     public void addCaptureEvent(CaptureEvent myCapt){
