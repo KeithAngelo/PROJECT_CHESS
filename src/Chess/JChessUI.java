@@ -45,7 +45,7 @@ public class JChessUI extends JPanel{
     private Border AllowedMoveBorder = BorderFactory.createLineBorder(AllowedMoveBorderColor,2);
 
     
-    
+    boolean AgainstBot = false;
     
     //DEPENDENCY INJECTION INTERFACES : 
     
@@ -258,5 +258,9 @@ public class JChessUI extends JPanel{
 
     public void addDrawEvent(DrawEvent thisDraw){
         ChessGame.addDrawEvent(thisDraw);
+    }
+
+    public void playAgainstBot(boolean play){
+        this.AgainstBot = play;
     }
 }

@@ -46,7 +46,7 @@ class myFrame extends JFrame{
 
         MyChessGame.addMoveEvent(e -> System.out.println(e + " has moved"));
 
-        MyChessGame.addDrawEvent(() -> System.out.println("is Draw"));
+        MyChessGame.addDrawEvent(() -> JOptionPane.showMessageDialog(new JFrame(), "Draw" ));
 
         // Create Undo Button at the bottom
         JButton GoBack = new JButton("Undo");
