@@ -202,6 +202,42 @@ public class King extends ChessPiece{
         return true;
     }
 
+    public boolean isDraw(ChessBoard CurrentBoard, ChessCoor CurrentCoord){
+        if(isChecked(CurrentBoard,CurrentCoord)){
+            return false;
+        }
+
+        //Check if there are no longer valid moves possible for all pieces on the board :
+        for(int Y = 0; Y < 8; Y++){
+            for(int X = 0; X < 8; X ++){
+
+                ChessBoard TestBoard = new ChessBoard(CurrentBoard);
+                ChessPiece CurrentPiece = TestBoard.peekPieceAt(X, Y);
+
+                if(CurrentPiece == null){
+                    continue;
+                }
+
+                if(CurrentPiece.getColor() != this.color){
+                    continue;
+                }
+
+                ArrayList<ChessCoor> PossibleMoves = CurrentPiece.GetPotentialMoves(CurrentBoard, new ChessCoor(X, Y));
+
+                for(ChessCoor testCoor : PossibleMoves){
+                    ChessBoard tempBoard = new ChessBoard(TestBoard);
+                    if(tempBoard.Move(new ChessCoor(X, Y), testCoor)){
+                        return false;
+                    }
+                }   
+
+            }
+        }
+
+
+        return true;
+    }
+
     @Override
     public ArrayList<ChessCoor> GetControlledSquares(ChessBoard CurrentBoard, ChessCoor CurrentCoord) {
         ArrayList<ChessCoor> NormalMoves = new ArrayList<>();

@@ -36,8 +36,8 @@ public class JChessUI extends JPanel{
     PieceColor PlayerColor = PieceColor.WHITE; //Color of player for easier reading. Pieces of this color Should be at the bottom
     /* Default player color is white unless specified */
 
-    Color WhiteSquares = new Color(0xFFFFFF);
-    Color DarkSquares = new Color(0x999999);
+    Color WhiteSquares = new Color(0xf3fff0);
+    Color DarkSquares = new Color(0x8fbd84);
     Color SelectedBorderColor = new Color(0x008800);
     Color AllowedMoveBorderColor = new Color(0xfcba03);
 
@@ -183,14 +183,6 @@ public class JChessUI extends JPanel{
 
         ChessGame.addWinEvent( ColorOfWinner -> {
 
-            // TODO : IMPLEMENT A WIN EVENT (in the context of this class)
-
-
-
-
-
-
-
             //Inversion of control, win event if ever there should be any actions outside the Chess Package
             if(JCHessWinEvent != null){
                 JCHessWinEvent.doWinEvent(ColorOfWinner);
@@ -262,5 +254,9 @@ public class JChessUI extends JPanel{
 
     public void addMoveEvent(MoveEvent thisMove){
         this.myMoveEvent = thisMove;
+    }
+
+    public void addDrawEvent(DrawEvent thisDraw){
+        ChessGame.addDrawEvent(thisDraw);
     }
 }

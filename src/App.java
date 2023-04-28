@@ -40,12 +40,13 @@ class myFrame extends JFrame{
  
             JOptionPane.showMessageDialog(new JFrame(), "CheckMate : " + e);
         
-        
         });
 
         MyChessGame.addCaptureEvent(e -> System.out.println("Captured piece is "+e));
 
         MyChessGame.addMoveEvent(e -> System.out.println(e + " has moved"));
+
+        MyChessGame.addDrawEvent(() -> System.out.println("is Draw"));
 
         // Create Undo Button at the bottom
         JButton GoBack = new JButton("Undo");

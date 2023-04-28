@@ -13,6 +13,7 @@ public class Game {
     Stack<ChessBoard> BoardHistory = new Stack<>();
 
     WinEvent currentWinEvent;
+    DrawEvent currentDrawEvent;
     CheckEvent currentCheckEvent;
 
 
@@ -31,6 +32,12 @@ public class Game {
                 if(currentBoard.isCheckMated()){
                     win(getCurrentTurn());
                     return true;
+                }
+
+                if(currentBoard.isDraw()){
+                    if(currentDrawEvent !=null){
+                        currentDrawEvent.doDrawEvent();
+                    }
                 }
 
                 if(currentBoard.isChecked()){
@@ -92,6 +99,10 @@ public class Game {
 
     public void addCaptureEvent(CaptureEvent myCapt){
         currentBoard.addCaptureEvent(myCapt);
+    }
+
+    public void addDrawEvent(DrawEvent myDraw){
+        this.currentDrawEvent = myDraw;
     }
 
 }
