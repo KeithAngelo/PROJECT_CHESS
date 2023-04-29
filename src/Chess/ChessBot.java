@@ -2,6 +2,7 @@ package Chess;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -38,6 +39,49 @@ public class ChessBot {
         return RecursiveGeneration(currGame, RecursionDepth);
 
         // return GenerateRandom(currGame);
+    }
+
+    private ChessCoor[] GenerateRandom(Game currGame){
+        ChessCoor[] generatedMove = new ChessCoor[2];
+
+        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
+
+
+        ChessBoard currBoard = currGame.currentBoard;
+        for(int initX = 0; initX < 8; initX++){
+            for(int initY = 0; initY < 8; initY++){
+                ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
+                if( currPiece== null){
+                    continue;
+                }
+
+                if(currPiece.getColor() != BOTColor){
+                    continue;
+                }
+
+                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
+                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
+
+                if(possiblePieceMoves.isEmpty()){
+                    continue;
+                }
+
+                for(ChessCoor newCoor : possiblePieceMoves){
+                    ChessCoor[] pairOfCoors = new ChessCoor[2];
+                    pairOfCoors[0] = new ChessCoor(initX , initY);
+                    pairOfCoors[1] = newCoor;
+                    possiblePairMoves.add(pairOfCoors);
+                }
+            }
+        }
+
+
+        //pick random coor in PossiblePairMoves
+
+        Random rand = new Random();
+        generatedMove = possiblePairMoves.get(rand.nextInt(0,possiblePairMoves.size()-1));
+
+        return generatedMove;
     }
 
     private ChessCoor[] RecursiveGeneration(Game currGame, int depth){
@@ -108,7 +152,7 @@ public class ChessBot {
         }
 
         
-
+        System.out.printf("FINAL is : %d init: X%d Y%d \n", ScoreOfHighest, HighestScoreCoor[0].getX(), HighestScoreCoor[0].getY());
         return HighestScoreCoor;
     }
 
@@ -127,7 +171,7 @@ public class ChessBot {
         // BASE CASE
         if(depth <= 0){
             ChessCoor[] HighestScoreCoors = null;
-            int scoreOfHighest = 0;
+            Integer scoreOfHighest = 0;
 
 
             for(ChessCoor[] currCoors : possiblePairMoves){
@@ -140,7 +184,7 @@ public class ChessBot {
                     scoreOfHighest = currentEval;
                 }
 
-                if(currentEval > scoreOfHighest){
+                if(OperationLogic(currentEval, scoreOfHighest, currentColor)){
                     HighestScoreCoors = currCoors;
                     scoreOfHighest = currentEval;
                 }
@@ -156,8 +200,11 @@ public class ChessBot {
             Game GameInst = new Game(currGame);
             GameInst.Move(CurrPair[0],CurrPair[1]);
 
+            // PieceColor newColor = GameInst.getCurrentTurn();
+
             if(LowestNum == null){
                 LowestNum = EvaluatePosition(GameInst);
+                continue;
             }
 
             
@@ -248,7 +295,9 @@ public class ChessBot {
     //If positive num, it is good for the bot color, and vice versa
     private int EvaluatePosition(Game thisGame){
         ChessBoard thisBoard = thisGame.currentBoard;
-        int Score = 0;
+
+        int PiecesScore = 0;
+        int PiecesScoreWeight = 5;
 
 
         if(thisBoard.isDraw()){
@@ -268,26 +317,68 @@ public class ChessBot {
         //TODO : Generate weighted scores of pieces on board
 
         int BoardPiecesBonus = 0;
+        int OpponentBoardScore = 0;
+
+        int CaptureScore = 0;
+        int CaptureWeight = 15;
 
         for(Map.Entry<ChessPiece, ChessCoor> entry : thisBoard.PieceMap.entrySet()){
-            ChessPiece currPiece = entry.getKey();
-            
 
+            ChessPiece currPiece = entry.getKey();
             if(currPiece.getColor() == BOTColor){
-                
+
+                //Add to Weighted Score
                 BoardPiecesBonus = BoardPiecesBonus + currPiece.getType().getWeight();
+
+                //Capture Score
+                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(entry.getValue().getX(),entry.getValue().getY());
+
+                if(PreviousPiece == null){
+                    continue;
+                }
+
+                if(PreviousPiece.getColor() == BOTColor){
+                    continue;
+                }
+
+                CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
+                System.out.println("CaptureScore is "+(CaptureScore*CaptureWeight));
                 
+            }
+
+            //Check if opponent has eaten bot piece
+            if(currPiece.getColor() != BOTColor){
+
+                //Add to weighted Score
+                OpponentBoardScore = OpponentBoardScore + currPiece.getType().getWeight();
+
+                //Capture Score
+                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(entry.getValue().getX(),entry.getValue().getY());
+
+                if(PreviousPiece == null){
+                    continue;
+                }
+
+                if(PreviousPiece.getColor() != BOTColor){
+                    continue;
+                }
+
+                CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
+
             }
         }
 
 
-        //TODO : Generate bonus for capture moves, and capture moves where captured piece is larger value
-
 
         //TODO : Generate small punishment for hanging pieces
 
-        Score = BoardPiecesBonus;
-        return Score;
+        
+
+        PiecesScore = BoardPiecesBonus-OpponentBoardScore;
+        // System.out.println("PiecesScore is "+PiecesScore);
+        
+
+        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight);
     }
 
 }
