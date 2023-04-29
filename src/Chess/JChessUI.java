@@ -162,9 +162,7 @@ public class JChessUI extends JPanel{
                             SelectedSquare = null;
                             LoadElements();
 
-                                //Bot Do a move
-                            
-
+                            //Bot Do a move
                             if(AgainstBot && !GameIsFinished){
                                 ChessCoor[] botMove = new ChessCoor[2];
                                 botMove = myBot.GenerateMove(ChessGame);

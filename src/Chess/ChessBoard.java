@@ -3,6 +3,8 @@ package Chess;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import Chess.Piece.*;
 import Chess.Util.*;
@@ -28,6 +30,8 @@ public class ChessBoard {
     CaptureEvent myCaptureEvent;
     //Default promotion event. this will be changed when addPromotionEvent() is called
     PromotionEvent myPromotionEvent = CurrentTurn -> new Queen(TurnColor);
+
+    HashMap<ChessPiece, ChessCoor> PieceMap = new HashMap<>();
 
     
     ChessBoard(){
@@ -73,12 +77,19 @@ public class ChessBoard {
             }
         }
 
+        //create duplicate hashMap
+        for(Map.Entry<ChessPiece, ChessCoor> MapEntry : copyChessBoard.PieceMap.entrySet()){
+            this.PieceMap.put(MapEntry.getKey(), MapEntry.getValue());
+        }
+
         this.TurnColor = copyChessBoard.TurnColor;
         
     }
 
     public void SetToDefaultPosition(){
         //TODO : FINISH THIS, remember to make empty squares null
+
+        PieceMap.clear();
 
         TurnColor = PieceColor.WHITE;
 
@@ -94,37 +105,55 @@ public class ChessBoard {
         //black pieces
         for(int X = 0; X < 8; X++){
             board[X][1] = new Pawn(PieceColor.BLACK);
+            PieceMap.put(board[X][1], new ChessCoor(X, 1));
         }
 
         board[0][0] = new Rook(PieceColor.BLACK);
+        PieceMap.put(board[0][0], new ChessCoor(0, 0));
         board[7][0] = new Rook(PieceColor.BLACK);
+        PieceMap.put(board[7][0], new ChessCoor(7, 0));
 
         board[1][0] = new Knight(PieceColor.BLACK);
+        PieceMap.put(board[1][0], new ChessCoor(1, 0));
         board[6][0] = new Knight(PieceColor.BLACK);
+        PieceMap.put(board[6][0], new ChessCoor(6, 0));
 
         board[2][0] = new Bishop(PieceColor.BLACK);
+        PieceMap.put(board[2][0], new ChessCoor(2, 0));
         board[5][0] = new Bishop(PieceColor.BLACK);
+        PieceMap.put(board[5][0], new ChessCoor(5, 0));
 
         board[3][0] = new Queen(PieceColor.BLACK);
+        PieceMap.put(board[3][0], new ChessCoor(3, 0));
         board[4][0] = new King(PieceColor.BLACK);
+        PieceMap.put(board[4][0], new ChessCoor(4, 0));
 
 
         //White pieces
         for(int X = 0; X < 8; X++){
             board[X][6] = new Pawn(PieceColor.WHITE);
+            PieceMap.put(board[X][6], new ChessCoor(X, 6));
         }
 
         board[0][7] = new Rook(PieceColor.WHITE);
+        PieceMap.put(board[0][7], new ChessCoor(0, 7));
         board[7][7] = new Rook(PieceColor.WHITE);
+        PieceMap.put(board[7][7], new ChessCoor(7, 7));
 
         board[1][7] = new Knight(PieceColor.WHITE);
+        PieceMap.put(board[1][7], new ChessCoor(1, 7));
         board[6][7] = new Knight(PieceColor.WHITE);
+        PieceMap.put(board[6][7], new ChessCoor(6, 7));
 
         board[2][7] = new Bishop(PieceColor.WHITE);
+        PieceMap.put(board[2][7], new ChessCoor(2, 7));
         board[5][7] = new Bishop(PieceColor.WHITE);
+        PieceMap.put(board[5][7], new ChessCoor(5, 7));
 
         board[3][7] = new Queen(PieceColor.WHITE);
+        PieceMap.put(board[3][7], new ChessCoor(3, 7));
         board[4][7] = new King(PieceColor.WHITE);
+        PieceMap.put(board[4][7], new ChessCoor(4, 7));
 
         
         
@@ -161,6 +190,11 @@ public class ChessBoard {
             }
 
             if(isShortCastleMove(initialCoor, NewCoor)){
+                //Update piece Map
+                PieceMap.put(board[initialCoor.getX()][initialCoor.getY()], NewCoor);
+                PieceMap.remove(board[NewCoor.getX()][NewCoor.getY()]);
+
+
                 board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
                 board[initialCoor.getX()][initialCoor.getY()] = null;
 
@@ -170,6 +204,8 @@ public class ChessBoard {
                 }else{
                     YCoor = 0;
                 }
+
+                PieceMap.put(board[7][YCoor], new ChessCoor(5, YCoor));
 
                 board[5][YCoor] = board[7][YCoor];
                 board[7][YCoor] = null;
@@ -179,6 +215,11 @@ public class ChessBoard {
             }
 
             if(isLongCastleMove(initialCoor, NewCoor)){
+                //Update PieceMap
+                PieceMap.put(board[initialCoor.getX()][initialCoor.getY()], NewCoor);
+                PieceMap.remove(board[NewCoor.getX()][NewCoor.getY()]);
+
+
                 board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
                 board[initialCoor.getX()][initialCoor.getY()] = null;
 
@@ -188,6 +229,8 @@ public class ChessBoard {
                 }else{
                     YCoor = 0;
                 }
+
+                PieceMap.put(board[0][YCoor], new ChessCoor(3, YCoor));
 
                 board[3][YCoor] = board[0][YCoor];
                 board[0][YCoor] = null;
@@ -204,15 +247,28 @@ public class ChessBoard {
                 
             }
             
+            //Update PieceMap
+            PieceMap.put(board[initialCoor.getX()][initialCoor.getY()], NewCoor);
+            PieceMap.remove(board[NewCoor.getX()][NewCoor.getY()]);
             
             //Actual Moving
             board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
             board[initialCoor.getX()][initialCoor.getY()] = null;
 
+            
+            
+
             //In case a pawn must be promoted
             ChessCoor PawnPromotion = pawMustBePromoted();
             if(PawnPromotion != null){
-                board[PawnPromotion.getX()][PawnPromotion.getY()] = myPromotionEvent.doPromotionEvent(TurnColor);
+                ChessPiece promotedPiece = myPromotionEvent.doPromotionEvent(TurnColor);
+
+                //Update PieceMap
+                PieceMap.remove(board[PawnPromotion.getX()][PawnPromotion.getY()]);
+                PieceMap.put(promotedPiece, PawnPromotion);
+
+                //Actual promoting
+                board[PawnPromotion.getX()][PawnPromotion.getY()] = promotedPiece;
             }
 
             NextTurn();
