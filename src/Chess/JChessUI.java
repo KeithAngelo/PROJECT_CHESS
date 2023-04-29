@@ -270,6 +270,8 @@ public class JChessUI extends JPanel{
     }
 
     public void Revert(){
+        GameIsFinished = false;
+        
         ChessGame.Revert();
         if(AgainstBot){
             //If playing against bot, you will revert twice
@@ -279,6 +281,8 @@ public class JChessUI extends JPanel{
     }   
 
     public void ResetGame(){
+        GameIsFinished = false;
+
         ChessGame.ResetGame();
         SelectedSquare = null;
 

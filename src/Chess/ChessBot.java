@@ -35,7 +35,7 @@ public class ChessBot {
 
         //TODO - Complete this
 
-        int RecursionDepth = 3;
+        int RecursionDepth = 2;
         return RecursiveGeneration(currGame, RecursionDepth);
 
         // return GenerateRandom(currGame);
@@ -46,7 +46,7 @@ public class ChessBot {
         PieceColor currentColor = currBoard.TurnColor;
 
         ArrayList<ChessCoor[]> possiblePairMoves = generatePosPairMoves(currBoard, currentColor);
-        HashMap< ChessCoor[], Double> EvaluationMap = new HashMap<>();
+        HashMap< ChessCoor[], Integer> EvaluationMap = new HashMap<>();
 
         
         for(ChessCoor[] CurrPair : possiblePairMoves){
@@ -54,7 +54,7 @@ public class ChessBot {
             GameInst.Move(CurrPair[0],CurrPair[1]);
 
             if(GameInst.currentBoard.isDraw()){
-                EvaluationMap.put(CurrPair,0.0);
+                EvaluationMap.put(CurrPair,0);
             }
 
             if(GameInst.currentBoard.isCheckMated()){
@@ -65,8 +65,30 @@ public class ChessBot {
         }
 
         ChessCoor[] HighestScoreCoor = null;
-        Double ScoreOfHighest = 0.0;
-        for(ChessCoor[] CurrPair : possiblePairMoves){
+        int ScoreOfHighest = 0;
+
+        //Use Linear method for optimization later
+        // for(ChessCoor[] CurrPair : possiblePairMoves){
+
+        //     if(HighestScoreCoor == null){
+        //         HighestScoreCoor = CurrPair;
+        //         ScoreOfHighest = EvaluationMap.get(CurrPair);
+        //         continue;
+        //     }
+
+        //     if(EvaluationMap.get(CurrPair) > ScoreOfHighest){
+        //         HighestScoreCoor = CurrPair;
+        //         ScoreOfHighest = EvaluationMap.get(CurrPair);
+        //     }
+        // }
+
+
+        //This randomizes order of checking thie highest value
+        while(!possiblePairMoves.isEmpty()){
+            Random rand = new Random();
+            int RandNum = rand.nextInt(0,possiblePairMoves.size());
+
+            ChessCoor[] CurrPair = possiblePairMoves.get(RandNum);
 
             if(HighestScoreCoor == null){
                 HighestScoreCoor = CurrPair;
@@ -78,13 +100,19 @@ public class ChessBot {
                 HighestScoreCoor = CurrPair;
                 ScoreOfHighest = EvaluationMap.get(CurrPair);
             }
+
+            possiblePairMoves.remove(RandNum);
         }
+
+        
 
         return HighestScoreCoor;
     }
 
+    // This will return the score of the worst case 
+    private int RecursiveEvaluation(Game currGame, int depth){
 
-    private Double RecursiveEvaluation(Game currGame, int depth){
+        // TODO : Refactor by renaming highest to lowest naming
 
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
@@ -94,20 +122,20 @@ public class ChessBot {
         // BASE CASE
         if(depth <= 0){
             ChessCoor[] HighestScoreCoors = null;
-            Double scoreOfHighest = 0.0;
+            int scoreOfHighest = 0;
 
 
             for(ChessCoor[] currCoors : possiblePairMoves){
                 Game testGame = new Game(currGame);
                 testGame.Move( currCoors[0], currCoors[1]);
-                Double currentEval = EvaluatePosition(currGame);
+                int currentEval = EvaluatePosition(currGame);
 
                 if(HighestScoreCoors == null){
                     HighestScoreCoors = currCoors;
                     scoreOfHighest = currentEval;
                 }
 
-                if(currentEval > scoreOfHighest){
+                if(currentEval < scoreOfHighest){
                     HighestScoreCoors = currCoors;
                     scoreOfHighest = currentEval;
                 }
@@ -117,14 +145,14 @@ public class ChessBot {
 
         }
 
-        LinkedList<Double> EvaluationList = new LinkedList<>();
+        LinkedList<Integer> EvaluationList = new LinkedList<>();
 
         for(ChessCoor[] CurrPair : possiblePairMoves){
             Game GameInst = new Game(currGame);
             GameInst.Move(CurrPair[0],CurrPair[1]);
 
             if(GameInst.currentBoard.isDraw()){
-                EvaluationList.add(0.0);
+                EvaluationList.add(0);
             }
 
             if(GameInst.currentBoard.isCheckMated()){
@@ -234,21 +262,21 @@ public class ChessBot {
 
 
     //If positive num, it is good for the bot color, and vice versa
-    private Double EvaluatePosition(Game thisGame){
+    private int EvaluatePosition(Game thisGame){
         ChessBoard thisBoard = thisGame.currentBoard;
-        Double Score = 0.0;
-        Double sign = 1.0;
+        int Score = 0;
+        int sign = 1;
 
-        if(thisGame.getCurrentTurn() != BOTColor){
-            sign = -1.0;
+        if(thisGame.getCurrentTurn() == BOTColor){
+            sign = -1;
         }
 
         if(thisBoard.isDraw()){
-            return 0.0;
+            return 0;
         }
 
-        if(thisBoard.isCheckMated() && thisBoard.TurnColor != BOTColor){
-            return -1000000000.0;
+        if(thisBoard.isCheckMated() && thisBoard.TurnColor == BOTColor){
+            return -1000000;
         }
 
 
