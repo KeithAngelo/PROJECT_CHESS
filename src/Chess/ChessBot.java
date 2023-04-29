@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 import Chess.Piece.ChessPiece;
@@ -96,12 +97,12 @@ public class ChessBot {
                 continue;
             }
 
-            if(EvaluationMap.get(CurrPair) > ScoreOfHighest){
+            if(EvaluationMap.get(CurrPair) > ScoreOfHighest){ // Operation of determining which move will be filtered
                 HighestScoreCoor = CurrPair;
                 ScoreOfHighest = EvaluationMap.get(CurrPair);
             }
 
-            System.out.println(EvaluationMap.get(CurrPair));
+            System.out.printf("Score is : %d init: X%d Y%d  fin: X%d Y%d\n",EvaluationMap.get(CurrPair), CurrPair[0].getX(), CurrPair[0].getY() , CurrPair[1].getX(), CurrPair[1].getY());
 
             possiblePairMoves.remove(RandNum);
         }
@@ -139,7 +140,7 @@ public class ChessBot {
                     scoreOfHighest = currentEval;
                 }
 
-                if(currentEval < scoreOfHighest){
+                if(currentEval > scoreOfHighest){
                     HighestScoreCoors = currCoors;
                     scoreOfHighest = currentEval;
                 }
@@ -149,16 +150,20 @@ public class ChessBot {
 
         }
 
-        int LowestNum = Integer.MAX_VALUE;
+        Integer LowestNum = null;
 
         for(ChessCoor[] CurrPair : possiblePairMoves){
             Game GameInst = new Game(currGame);
             GameInst.Move(CurrPair[0],CurrPair[1]);
 
+            if(LowestNum == null){
+                LowestNum = EvaluatePosition(GameInst);
+            }
+
             
 
             if(GameInst.currentBoard.isDraw()){
-                if(0 < LowestNum){
+                if(OperationLogic(0, LowestNum, currentColor)){
                     LowestNum = 0;
                 }
                 continue;
@@ -166,7 +171,7 @@ public class ChessBot {
 
             if(GameInst.currentBoard.isCheckMated()){
                 int currentEval = EvaluatePosition(GameInst);
-                if(currentEval < LowestNum){
+                if(OperationLogic(currentEval, LowestNum, currentColor)){
                     LowestNum = currentEval;
                 }
                 continue;
@@ -174,13 +179,21 @@ public class ChessBot {
 
 
             int currentEval = RecursiveEvaluation(GameInst, depth-1);
-            if(currentEval < LowestNum){
+            if(OperationLogic(currentEval, LowestNum, currentColor)){
                 LowestNum = currentEval;
             }
         }
 
 
         return LowestNum;
+    }
+
+    private boolean OperationLogic(int num1, int num2, PieceColor currColor){
+        if(currColor != BOTColor){
+            return num1 < num2;
+        }else{
+            return num1 > num2;
+        }
     }
 
     private ArrayList<ChessCoor[]> generatePosPairMoves(ChessBoard currBoard, PieceColor currentColor){
@@ -236,29 +249,36 @@ public class ChessBot {
     private int EvaluatePosition(Game thisGame){
         ChessBoard thisBoard = thisGame.currentBoard;
         int Score = 0;
-        int sign = 1;
 
-        if(thisGame.getCurrentTurn() == BOTColor){
-            sign = -1;
-        }
 
         if(thisBoard.isDraw()){
             return 0;
         }
 
-        if(thisBoard.isCheckMated() && thisBoard.TurnColor == BOTColor){
-            return Integer.MIN_VALUE;
-        }
 
-        if(thisBoard.isCheckMated() && thisBoard.TurnColor != BOTColor){
+        if(thisBoard.isCheckMated() && thisGame.getCurrentTurn() != BOTColor){
             return Integer.MAX_VALUE;
         }
+
+        if(thisBoard.isCheckMated() && thisGame.getCurrentTurn() == BOTColor){
+            return Integer.MIN_VALUE;
+        }
+        
 
         //TODO : Generate weighted scores of pieces on board
 
         int BoardPiecesBonus = 0;
 
+        for(Map.Entry<ChessPiece, ChessCoor> entry : thisBoard.PieceMap.entrySet()){
+            ChessPiece currPiece = entry.getKey();
+            
 
+            if(currPiece.getColor() == BOTColor){
+                
+                BoardPiecesBonus = BoardPiecesBonus + currPiece.getType().getWeight();
+                
+            }
+        }
 
 
         //TODO : Generate bonus for capture moves, and capture moves where captured piece is larger value
@@ -266,8 +286,8 @@ public class ChessBot {
 
         //TODO : Generate small punishment for hanging pieces
 
-
-        return Score*sign;
+        Score = BoardPiecesBonus;
+        return Score;
     }
 
 }

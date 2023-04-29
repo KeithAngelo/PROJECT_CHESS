@@ -13,4 +13,8 @@ public enum PieceType{
     PieceType(int PieceWeight){
         this.PieceWeight = PieceWeight;
     }
+
+    public int getWeight(){
+        return PieceWeight;
+    }
 }
