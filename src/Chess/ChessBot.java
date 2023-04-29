@@ -35,60 +35,17 @@ public class ChessBot {
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
 
-        long start = System.nanoTime();
+        // long start = System.nanoTime();
 
-        int RecursionDepth = 3;
-        ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
+        // int RecursionDepth = 3;
+        // ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
 
-        long duration = (System.nanoTime() - start)/1000000;
+        // long duration = (System.nanoTime() - start)/1000000;
 
-        System.out.println("Time : "+duration+"ms");
-        return output;
+        // System.out.println("Time : "+duration+"ms");
+        // return output;
 
-        // return GenerateRandom(currGame);
-    }
-
-    private ChessCoor[] GenerateRandom(Game currGame){
-        ChessCoor[] generatedMove = new ChessCoor[2];
-
-        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
-
-
-        ChessBoard currBoard = currGame.currentBoard;
-        for(int initX = 0; initX < 8; initX++){
-            for(int initY = 0; initY < 8; initY++){
-                ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
-                if( currPiece== null){
-                    continue;
-                }
-
-                if(currPiece.getColor() != BOTColor){
-                    continue;
-                }
-
-                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
-                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
-
-                if(possiblePieceMoves.isEmpty()){
-                    continue;
-                }
-
-                for(ChessCoor newCoor : possiblePieceMoves){
-                    ChessCoor[] pairOfCoors = new ChessCoor[2];
-                    pairOfCoors[0] = new ChessCoor(initX , initY);
-                    pairOfCoors[1] = newCoor;
-                    possiblePairMoves.add(pairOfCoors);
-                }
-            }
-        }
-
-
-        //pick random coor in PossiblePairMoves
-
-        Random rand = new Random();
-        generatedMove = possiblePairMoves.get(rand.nextInt(0,possiblePairMoves.size()-1));
-
-        return generatedMove;
+        return GenerateRandom(currGame);
     }
 
     private ChessCoor[] RecursiveGeneration(Game currGame, int depth){
@@ -385,6 +342,49 @@ public class ChessBot {
         
 
         return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight);
+    }
+
+    private ChessCoor[] GenerateRandom(Game currGame){
+        ChessCoor[] generatedMove = new ChessCoor[2];
+
+        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
+
+
+        ChessBoard currBoard = currGame.currentBoard;
+        for(int initX = 0; initX < 8; initX++){
+            for(int initY = 0; initY < 8; initY++){
+                ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
+                if( currPiece== null){
+                    continue;
+                }
+
+                if(currPiece.getColor() != BOTColor){
+                    continue;
+                }
+
+                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
+                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
+
+                if(possiblePieceMoves.isEmpty()){
+                    continue;
+                }
+
+                for(ChessCoor newCoor : possiblePieceMoves){
+                    ChessCoor[] pairOfCoors = new ChessCoor[2];
+                    pairOfCoors[0] = new ChessCoor(initX , initY);
+                    pairOfCoors[1] = newCoor;
+                    possiblePairMoves.add(pairOfCoors);
+                }
+            }
+        }
+
+
+        //pick random coor in PossiblePairMoves
+
+        Random rand = new Random();
+        generatedMove = possiblePairMoves.get(rand.nextInt(0,possiblePairMoves.size()-1));
+
+        return generatedMove;
     }
 
 }
