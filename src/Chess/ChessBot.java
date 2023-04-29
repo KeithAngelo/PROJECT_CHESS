@@ -35,93 +35,53 @@ public class ChessBot {
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
 
-        // long start = System.nanoTime();
+        long start = System.nanoTime();
 
-        // int RecursionDepth = 3;
-        // ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
+        int RecursionDepth = 6;
+        ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
 
-        // long duration = (System.nanoTime() - start)/1000000;
+        long duration = (System.nanoTime() - start)/1000000;
 
-        // System.out.println("Time : "+duration+"ms");
-        // return output;
+        System.out.println("Time : "+duration+"ms");
+        return output;
 
-        return GenerateRandom(currGame);
+        // return GenerateRandom(currGame);
     }
 
     private ChessCoor[] RecursiveGeneration(Game currGame, int depth){
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
 
-        ArrayList<ChessCoor[]> possiblePairMoves = generatePosPairMoves(currBoard, currentColor);
-        HashMap< ChessCoor[], Integer> EvaluationMap = new HashMap<>();
+        ArrayList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
 
-        
-        for(ChessCoor[] CurrPair : possiblePairMoves){
-            Game GameInst = new Game(currGame);
-            GameInst.Move(CurrPair[0],CurrPair[1]);
 
-            if(GameInst.currentBoard.isDraw()){
-                EvaluationMap.put(CurrPair,0);
-                continue;
+        int HighestScore = Integer.MIN_VALUE;
+        ChessCoor[] MaxCoors = null;
+
+        boolean isMax = false;
+
+        for(ChessCoor[] CoorPair : ListPossibleMoves){
+
+            Game newGame = new Game(currGame);
+            newGame.Move(CoorPair[0],CoorPair[1]);
+
+
+            int newEval = RecursiveEvaluation(newGame, depth-1, isMax);
+
+            if(newEval > HighestScore){
+                HighestScore = newEval;
+                MaxCoors = CoorPair;
             }
 
-            if(GameInst.currentBoard.isCheckMated()){
-                EvaluationMap.put(CurrPair, EvaluatePosition(GameInst));
-                continue;
-            }
 
-            EvaluationMap.put(CurrPair, RecursiveEvaluation(GameInst, depth-1));
-        }
-
-        ChessCoor[] HighestScoreCoor = null;
-        int ScoreOfHighest = 0;
-
-        //Use Linear method for optimization later
-        // for(ChessCoor[] CurrPair : possiblePairMoves){
-
-        //     if(HighestScoreCoor == null){
-        //         HighestScoreCoor = CurrPair;
-        //         ScoreOfHighest = EvaluationMap.get(CurrPair);
-        //         continue;
-        //     }
-
-        //     if(EvaluationMap.get(CurrPair) > ScoreOfHighest){
-        //         HighestScoreCoor = CurrPair;
-        //         ScoreOfHighest = EvaluationMap.get(CurrPair);
-        //     }
-        // }
-
-
-        //This randomizes order of checking thie highest value
-        while(!possiblePairMoves.isEmpty()){
-            Random rand = new Random();
-            int RandNum = rand.nextInt(0,possiblePairMoves.size());
-
-            ChessCoor[] CurrPair = possiblePairMoves.get(RandNum);
-
-            if(HighestScoreCoor == null){
-                HighestScoreCoor = CurrPair;
-                ScoreOfHighest = EvaluationMap.get(CurrPair);
-                continue;
-            }
-
-            if(EvaluationMap.get(CurrPair) > ScoreOfHighest){ // Operation of determining which move will be filtered
-                HighestScoreCoor = CurrPair;
-                ScoreOfHighest = EvaluationMap.get(CurrPair);
-            }
-
-            System.out.printf("Score is : %d init: X%d Y%d  fin: X%d Y%d\n",EvaluationMap.get(CurrPair), CurrPair[0].getX(), CurrPair[0].getY() , CurrPair[1].getX(), CurrPair[1].getY());
-
-            possiblePairMoves.remove(RandNum);
         }
 
         
-        System.out.printf("FINAL is : %d init: X%d Y%d \n", ScoreOfHighest, HighestScoreCoor[0].getX(), HighestScoreCoor[0].getY());
-        return HighestScoreCoor;
+        return MaxCoors;
     }
-
+ 
     // This will return the score of the worst case 
-    private int RecursiveEvaluation(Game currGame, int depth){
+    private int RecursiveEvaluation(Game currGame, int depth, boolean isMaximizing){
 
         //TODO : Implement Alpha beta pruning
 
@@ -130,134 +90,58 @@ public class ChessBot {
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
 
-        ArrayList<ChessCoor[]> possiblePairMoves = generatePosPairMoves(currBoard, currentColor);
-
-        // BASE CASE
         if(depth <= 0){
-            ChessCoor[] HighestScoreCoors = null;
-            Integer scoreOfHighest = 0;
+            return EvaluatePosition(currGame);
+        }
 
+        ArrayList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
 
-            for(ChessCoor[] currCoors : possiblePairMoves){
-                Game testGame = new Game(currGame);
-                testGame.Move( currCoors[0], currCoors[1]);
-                int currentEval = EvaluatePosition(currGame);
+        for(ChessCoor[] CoorPair : ListPossibleMoves){
 
-                if(HighestScoreCoors == null){
-                    HighestScoreCoors = currCoors;
-                    scoreOfHighest = currentEval;
-                }
+            Game newGame = new Game(currGame);
+            newGame.Move(CoorPair[0],CoorPair[1]);
 
-                if(OperationLogic(currentEval, scoreOfHighest, currentColor)){
-                    HighestScoreCoors = currCoors;
-                    scoreOfHighest = currentEval;
-                }
+            if(newGame.currentBoard.isCheckMated()){
+                return EvaluatePosition(newGame);
             }
 
-            return scoreOfHighest;
+            if(newGame.currentBoard.isDraw()){
+                return 0;
+            }
+
+            if(isMaximizing){
+                int minValue = Integer.MIN_VALUE;
+
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, false);
+                if(ChildScore > minValue){
+                    minValue = ChildScore;
+                }
+
+                return minValue;
+
+
+            }else{
+                int maxValue = Integer.MAX_VALUE;
+
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, true);
+
+                if(ChildScore < maxValue){
+                    maxValue = ChildScore;
+                }
+
+                return maxValue;
+            }
 
         }
 
-        Integer LowestNum = null;
 
-        for(ChessCoor[] CurrPair : possiblePairMoves){
-            Game GameInst = new Game(currGame);
-            GameInst.Move(CurrPair[0],CurrPair[1]);
+        // i dont think this part of the code is reachable
+        throw new UnknownError();
 
-            // PieceColor newColor = GameInst.getCurrentTurn();
-
-            if(LowestNum == null){
-                LowestNum = EvaluatePosition(GameInst);
-                continue;
-            }
-
-            
-
-            if(GameInst.currentBoard.isDraw()){
-                if(OperationLogic(0, LowestNum, currentColor)){
-                    LowestNum = 0;
-                }
-                continue;
-            }
-
-            if(GameInst.currentBoard.isCheckMated()){
-                int currentEval = EvaluatePosition(GameInst);
-                if(OperationLogic(currentEval, LowestNum, currentColor)){
-                    LowestNum = currentEval;
-                }
-                continue;
-            }
-
-
-            int currentEval = RecursiveEvaluation(GameInst, depth-1);
-            if(OperationLogic(currentEval, LowestNum, currentColor)){
-                LowestNum = currentEval;
-            }
-        }
-
-
-        return LowestNum;
     }
-
-    private boolean OperationLogic(int num1, int num2, PieceColor currColor){
-        if(currColor != BOTColor){
-            return num1 < num2;
-        }else{
-            return num1 > num2;
-        }
-    }
-
-    private ArrayList<ChessCoor[]> generatePosPairMoves(ChessBoard currBoard, PieceColor currentColor){
-        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
-        
-
-        for(int initX = 0; initX < 8; initX++){
-            for(int initY = 0; initY < 8; initY++){
-                ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
-                if( currPiece== null){
-                    continue;
-                }
-
-                if(currPiece.getColor() != currentColor){
-                    continue;
-                }
-
-                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
-                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
-
-                if(possiblePieceMoves.isEmpty()){
-                    continue;
-                }
-
-                for(ChessCoor newCoor : possiblePieceMoves){
-                    ChessCoor[] pairOfCoors = new ChessCoor[2];
-                    pairOfCoors[0] = new ChessCoor(initX , initY);
-                    pairOfCoors[1] = newCoor;
-                    possiblePairMoves.add(pairOfCoors);
-                }
-            }
-        }
-
-        return possiblePairMoves;
-    }
-
-    //this method is disgusting
-    private ArrayList<ChessCoor> PiecePossibleMoves(ChessBoard myBoard, ChessCoor initCoor){
-        ArrayList<ChessCoor> possMoves = new ArrayList<>();
-        for(int X = 0; X < 8; X++){
-            for(int Y = 0; Y < 8; Y++){
-                ChessBoard testBoard = new ChessBoard(myBoard);
-                if(testBoard.Move(initCoor, new ChessCoor(X, Y))){
-                    possMoves.add(new ChessCoor(X, Y));
-                }
-            }
-        }
-        return possMoves;
-    }
-
-
+    
     //If positive num, it is good for the bot color, and vice versa
-    private int EvaluatePosition(Game thisGame){
+    public int EvaluatePosition(Game thisGame){
         ChessBoard thisBoard = thisGame.currentBoard;
 
         int PiecesScore = 0;
@@ -343,6 +227,56 @@ public class ChessBot {
 
         return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight);
     }
+
+    private ArrayList<ChessCoor[]> generatePosPairMoves(ChessBoard currBoard, PieceColor currentColor){
+        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
+        
+
+        for(int initX = 0; initX < 8; initX++){
+            for(int initY = 0; initY < 8; initY++){
+                ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
+                if( currPiece== null){
+                    continue;
+                }
+
+                if(currPiece.getColor() != currentColor){
+                    continue;
+                }
+
+                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
+                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
+
+                if(possiblePieceMoves.isEmpty()){
+                    continue;
+                }
+
+                for(ChessCoor newCoor : possiblePieceMoves){
+                    ChessCoor[] pairOfCoors = new ChessCoor[2];
+                    pairOfCoors[0] = new ChessCoor(initX , initY);
+                    pairOfCoors[1] = newCoor;
+                    possiblePairMoves.add(pairOfCoors);
+                }
+            }
+        }
+
+        return possiblePairMoves;
+    }
+
+    //this method is disgusting
+    private ArrayList<ChessCoor> PiecePossibleMoves(ChessBoard myBoard, ChessCoor initCoor){
+        ArrayList<ChessCoor> possMoves = new ArrayList<>();
+        for(int X = 0; X < 8; X++){
+            for(int Y = 0; Y < 8; Y++){
+                ChessBoard testBoard = new ChessBoard(myBoard);
+                if(testBoard.Move(initCoor, new ChessCoor(X, Y))){
+                    possMoves.add(new ChessCoor(X, Y));
+                }
+            }
+        }
+        return possMoves;
+    }
+
+
 
     private ChessCoor[] GenerateRandom(Game currGame){
         ChessCoor[] generatedMove = new ChessCoor[2];
