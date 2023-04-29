@@ -35,8 +35,15 @@ public class ChessBot {
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
 
-        int RecursionDepth = 2;
-        return RecursiveGeneration(currGame, RecursionDepth);
+        long start = System.nanoTime();
+
+        int RecursionDepth = 3;
+        ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
+
+        long duration = (System.nanoTime() - start)/1000000;
+
+        System.out.println("Time : "+duration+"ms");
+        return output;
 
         // return GenerateRandom(currGame);
     }
@@ -342,7 +349,6 @@ public class ChessBot {
                 }
 
                 CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
-                System.out.println("CaptureScore is "+(CaptureScore*CaptureWeight));
                 
             }
 
