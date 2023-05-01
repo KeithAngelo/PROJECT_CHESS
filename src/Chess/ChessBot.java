@@ -38,7 +38,7 @@ public class ChessBot {
 
         long start = System.nanoTime();
 
-        int RecursionDepth = 2;
+        int RecursionDepth = 3;
         ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
 
         long duration = (System.nanoTime() - start)/1000000;
@@ -77,10 +77,7 @@ public class ChessBot {
                 MaxCoors = CoorPair;
             }
 
-
         }
-
-        
         return MaxCoors;
     }
  
@@ -185,10 +182,11 @@ public class ChessBot {
 
         int CaptureScore = 0;
         int CaptureWeight = 15;
-
+        // System.out.println("-----------------------");
         for(Map.Entry<ChessPiece, ChessCoor> entry : thisBoard.PieceMap.entrySet()){
-
+            
             ChessPiece currPiece = entry.getKey();
+            // System.out.printf("%s %s at X%d  Y%d\n",currPiece.getColor(), currPiece.getType(),entry.getValue().getX(),entry.getValue().getY());
             if(currPiece.getColor() == BOTColor){
 
                 //Add to Weighted Score
@@ -204,13 +202,13 @@ public class ChessBot {
                 if(PreviousPiece.getColor() == BOTColor){
                     continue;
                 }
-
+                System.out.println("Is Good capture");
                 CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
                 
             }
 
             //Check if opponent has eaten bot piece
-            if(currPiece.getColor() != BOTColor){
+            else{
 
                 //Add to weighted Score
                 OpponentBoardScore = OpponentBoardScore + currPiece.getType().getWeight();
@@ -225,15 +223,16 @@ public class ChessBot {
                 if(PreviousPiece.getColor() != BOTColor){
                     continue;
                 }
-
+                System.out.println("Is Bad capture");
                 CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
 
             }
         }
-
+        // System.out.println("-----------------------");
 
 
         //TODO : Generate small punishment for hanging pieces
+        //Add a multiplier for the hanging piece weight
 
         
 

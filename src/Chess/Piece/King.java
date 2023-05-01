@@ -161,6 +161,7 @@ public class King extends ChessPiece{
     }
     
     public boolean isChecked(ChessBoard CurrentBoard, ChessCoor CurrentCoord){
+        //TODO : When checking if the king is in check, you just have to check the straight lines, diagonals, pawns and knights
         return CurrentCoord.isContainedIn(getEnemySquares(CurrentBoard));
     }
 

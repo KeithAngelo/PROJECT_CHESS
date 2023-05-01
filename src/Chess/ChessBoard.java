@@ -33,6 +33,10 @@ public class ChessBoard {
 
     HashMap<ChessPiece, ChessCoor> PieceMap = new HashMap<>();
 
+    //TODO : Implement a way to store what was the previous move
+    //InitNewCoor[0] is Initial Coordinate, InitCoor[1] is new Coordinate
+    ChessCoor[] InitNewCoor = new ChessCoor[2];
+    boolean PreviousIsCapture = false;
     
     ChessBoard(){
         SetToDefaultPosition();

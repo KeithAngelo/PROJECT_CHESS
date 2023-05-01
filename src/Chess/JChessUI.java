@@ -184,6 +184,7 @@ public class JChessUI extends JPanel{
                     }
                 }
                 }
+                //Brain damage
                 
                 LoadElements();
             }
