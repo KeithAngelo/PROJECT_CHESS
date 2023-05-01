@@ -169,8 +169,8 @@ public class JChessUI extends JPanel{
 
                                 if(ChessGame.Move(botMove[0], botMove[1])){
 
-                                    int staticEvaluation = myBot.EvaluatePosition(ChessGame);
-                                    System.out.println("Static Evaluation : "+staticEvaluation);
+                                    // int staticEvaluation = myBot.EvaluatePosition(ChessGame);
+                                    // System.out.println("Static Evaluation : "+staticEvaluation);
 
 
                                     if(myMoveEvent != null){

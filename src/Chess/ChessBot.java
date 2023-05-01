@@ -30,19 +30,22 @@ public class ChessBot {
     }
 
 
-
+    int MovesEvaluated = 0;
+    int MovesTraversed = 0;
     //This will return an array of 2 ChessCoor.
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
 
         long start = System.nanoTime();
 
-        int RecursionDepth = 6;
+        int RecursionDepth = 2;
         ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
 
         long duration = (System.nanoTime() - start)/1000000;
 
         System.out.println("Time : "+duration+"ms");
+        System.out.println("Moves Evaluated : "+MovesEvaluated);
+        System.out.println("Moves Traversed : "+MovesTraversed+"\n\n\n");
         return output;
 
         // return GenerateRandom(currGame);
@@ -53,6 +56,7 @@ public class ChessBot {
         PieceColor currentColor = currBoard.TurnColor;
 
         ArrayList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
+        MovesTraversed = MovesTraversed + ListPossibleMoves.size();
 
 
         int HighestScore = Integer.MIN_VALUE;
@@ -95,53 +99,65 @@ public class ChessBot {
         }
 
         ArrayList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
+        MovesTraversed = MovesTraversed + ListPossibleMoves.size();
+        
+        if(isMaximizing){
+            int MaxValue = Integer.MIN_VALUE;
 
-        for(ChessCoor[] CoorPair : ListPossibleMoves){
+            for(ChessCoor[] CoorPair : ListPossibleMoves){
 
-            Game newGame = new Game(currGame);
-            newGame.Move(CoorPair[0],CoorPair[1]);
-
-            if(newGame.currentBoard.isCheckMated()){
-                return EvaluatePosition(newGame);
-            }
-
-            if(newGame.currentBoard.isDraw()){
-                return 0;
-            }
-
-            if(isMaximizing){
-                int minValue = Integer.MIN_VALUE;
-
+                Game newGame = new Game(currGame);
+                newGame.Move(CoorPair[0],CoorPair[1]);
+    
+                if(newGame.currentBoard.isCheckMated()){
+                    return EvaluatePosition(newGame);
+                }
+    
+                if(newGame.currentBoard.isDraw()){
+                    return 0;
+                }
                 int ChildScore = RecursiveEvaluation(newGame, depth-1, false);
-                if(ChildScore > minValue){
+                if(ChildScore > MaxValue){
+                    MaxValue = ChildScore;
+                }
+    
+            
+            }
+
+            return MaxValue;
+        }else{
+            int minValue = Integer.MAX_VALUE;
+
+            for(ChessCoor[] CoorPair : ListPossibleMoves){
+
+                Game newGame = new Game(currGame);
+                newGame.Move(CoorPair[0],CoorPair[1]);
+    
+                if(newGame.currentBoard.isCheckMated()){
+                    return EvaluatePosition(newGame);
+                }
+    
+                if(newGame.currentBoard.isDraw()){
+                    return 0;
+                }
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, false);
+                if(ChildScore < minValue){
                     minValue = ChildScore;
                 }
-
-                return minValue;
-
-
-            }else{
-                int maxValue = Integer.MAX_VALUE;
-
-                int ChildScore = RecursiveEvaluation(newGame, depth-1, true);
-
-                if(ChildScore < maxValue){
-                    maxValue = ChildScore;
-                }
-
-                return maxValue;
+    
+            
             }
 
+            
+            return minValue;
+            
         }
-
-
-        // i dont think this part of the code is reachable
-        throw new UnknownError();
-
     }
     
     //If positive num, it is good for the bot color, and vice versa
     public int EvaluatePosition(Game thisGame){
+        MovesEvaluated++;
+
         ChessBoard thisBoard = thisGame.currentBoard;
 
         int PiecesScore = 0;
