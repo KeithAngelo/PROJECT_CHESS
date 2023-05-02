@@ -125,6 +125,7 @@ public class ChessBot {
                 }
 
                 if(beta <= alpha){
+                    MovesPruned++;
                     break;
                 }
 
@@ -156,6 +157,7 @@ public class ChessBot {
                 }
 
                 if(beta <= alpha){
+                    MovesPruned++;
                     break;
                 }
     
