@@ -6,6 +6,19 @@ import javax.swing.*;
 import Chess.JChessUI;
 import Chess.Util.PieceColor;
 public class App {
+
+    private JPanel player1Panel;
+    private JPanel player2Panel;
+    private JLabel player1Label;
+    private JLabel player2Label;
+    private Timer player1Timer;
+    private Timer player2Timer;
+    private int player1Time;
+    private int player2Time;
+    private JButton startButton;
+    private boolean gameStarted;
+    private boolean player1Active;
+
     public static void main(String[] args) throws Exception {
         new myFrame();
     }
@@ -62,5 +75,26 @@ class myFrame extends JFrame{
         this.add(Reset,BorderLayout.NORTH);
         this.add(GoBack, BorderLayout.SOUTH);
         this.setVisible(true); //This Change
+        
+        private String formatTime(int seconds) {
+            if (e.getsource () == startButton) {
+                if (!gameStarted) {
+                    player1Timer.start();
+                    player1Active = true;
+                    gameStarted = true;
+                    startButton.setText("Stop");
+                } else {
+                    player1Timer.stop();
+                    player2Timer.stop();
+                    gameStarted = false;
+                    startButton.setText("Start");
+                }
+                
+            }
+            
+        }
     }
 }
+
+    
+    
