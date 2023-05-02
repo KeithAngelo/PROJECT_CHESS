@@ -32,6 +32,7 @@ public class ChessBot {
 
     int MovesEvaluated = 0;
     int MovesTraversed = 0;
+    int MovesPruned = 0;
     //This will return an array of 2 ChessCoor.
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
@@ -45,7 +46,8 @@ public class ChessBot {
 
         System.out.println("Time : "+duration+"ms");
         System.out.println("Moves Evaluated : "+MovesEvaluated);
-        System.out.println("Moves Traversed : "+MovesTraversed+"\n\n\n");
+        System.out.println("Moves Traversed : "+MovesTraversed);
+        System.out.println("Moves Pruned : "+MovesPruned+"\n\n\n");
         return output;
 
         // return GenerateRandom(currGame);
@@ -70,7 +72,7 @@ public class ChessBot {
             newGame.Move(CoorPair[0],CoorPair[1]);
 
 
-            int newEval = RecursiveEvaluation(newGame, depth-1, isMax);
+            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
             if(newEval > HighestScore){
                 HighestScore = newEval;
@@ -82,7 +84,7 @@ public class ChessBot {
     }
  
     // This will return the score of the worst case 
-    private int RecursiveEvaluation(Game currGame, int depth, boolean isMaximizing){
+    private int RecursiveEvaluation(Game currGame, int depth, boolean isMaximizing, int alpha, int beta){
 
         //TODO : Implement Alpha beta pruning
 
@@ -113,12 +115,19 @@ public class ChessBot {
                 if(newGame.currentBoard.isDraw()){
                     return 0;
                 }
-                int ChildScore = RecursiveEvaluation(newGame, depth-1, false);
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, false, alpha, beta);
                 if(ChildScore > MaxValue){
                     MaxValue = ChildScore;
                 }
-    
-            
+
+                if(MaxValue > alpha){
+                    alpha = MaxValue;
+                }
+
+                if(beta <= alpha){
+                    break;
+                }
+
             }
 
             return MaxValue;
@@ -137,9 +146,17 @@ public class ChessBot {
                 if(newGame.currentBoard.isDraw()){
                     return 0;
                 }
-                int ChildScore = RecursiveEvaluation(newGame, depth-1, false);
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, true, alpha, beta);
                 if(ChildScore < minValue){
                     minValue = ChildScore;
+                }
+
+                if(minValue < beta){
+                    beta = minValue;
+                }
+
+                if(beta <= alpha){
+                    break;
                 }
     
             
@@ -202,7 +219,6 @@ public class ChessBot {
                 if(PreviousPiece.getColor() == BOTColor){
                     continue;
                 }
-                System.out.println("Is Good capture");
                 CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
                 
             }
@@ -223,7 +239,6 @@ public class ChessBot {
                 if(PreviousPiece.getColor() != BOTColor){
                     continue;
                 }
-                System.out.println("Is Bad capture");
                 CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
 
             }
