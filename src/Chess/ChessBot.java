@@ -33,9 +33,14 @@ public class ChessBot {
     int MovesEvaluated = 0;
     int MovesTraversed = 0;
     int MovesPruned = 0;
+    int FinalEvaluation = 0;
     //This will return an array of 2 ChessCoor.
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
+        MovesEvaluated = 0;
+        MovesTraversed = 0;
+        MovesPruned = 0;
+        FinalEvaluation = 0;
 
         long start = System.nanoTime();
 
@@ -47,6 +52,7 @@ public class ChessBot {
         System.out.println("Time : "+duration+"ms");
         System.out.println("Moves Evaluated : "+MovesEvaluated);
         System.out.println("Moves Traversed : "+MovesTraversed);
+        System.out.println("Final Evaluation : "+FinalEvaluation);
         System.out.println("Moves Pruned : "+MovesPruned+"\n\n\n");
         return output;
 
@@ -65,6 +71,7 @@ public class ChessBot {
         ChessCoor[] MaxCoors = null;
 
         boolean isMax = false;
+        HashMap<ChessCoor[], Integer> ScoreMap = new HashMap<>();
 
         for(ChessCoor[] CoorPair : ListPossibleMoves){
 
@@ -74,12 +81,32 @@ public class ChessBot {
 
             int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
-            if(newEval > HighestScore){
+            ScoreMap.put(CoorPair, newEval);
+
+            // if(newEval >= HighestScore){
+            //     HighestScore = newEval;
+            //     MaxCoors = CoorPair;
+            // }
+        }
+
+        //Randomize order of getting highest number
+        while(!ListPossibleMoves.isEmpty()){
+            Random rand = new Random();
+            int index = rand.nextInt(ListPossibleMoves.size());
+
+
+            ChessCoor[] CoorPair = ListPossibleMoves.get(index);
+            int newEval = ScoreMap.get(CoorPair);
+
+            if(newEval >= HighestScore){
                 HighestScore = newEval;
                 MaxCoors = CoorPair;
-            }
+            } 
 
+            ListPossibleMoves.remove(index);
         }
+        
+        FinalEvaluation = HighestScore;
         return MaxCoors;
     }
  
