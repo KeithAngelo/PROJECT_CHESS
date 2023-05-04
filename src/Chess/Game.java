@@ -70,6 +70,7 @@ public class Game {
     }
 
     public boolean ResetGame(){
+        currentBoard.pieceMappings.clear();
         currentBoard.SetToDefaultPosition();
         BoardHistory.clear();
         BoardHistory.push(new ChessBoard(currentBoard));

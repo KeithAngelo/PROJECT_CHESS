@@ -35,7 +35,7 @@ public class ChessBot {
 
         long start = System.nanoTime();
 
-        int RecursionDepth = 3;
+        int RecursionDepth = 4;
         ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
 
         long duration = (System.nanoTime() - start)/1000000;

@@ -271,11 +271,11 @@ public class ChessBoard {
         TurnColor = PieceColor.WHITE;
 
         //Setting empty squares to null
-        // for(int Y = 2; Y <= 5; Y ++){
-        //     for(int X = 0; X < 8; X++){
-        //         board[X][Y] = null;
-        //     }
-        // }
+        for(int Y = 2; Y <= 5; Y ++){
+            for(int X = 0; X < 8; X++){
+                board[X][Y] = null;
+            }
+        }
 
         //Custom setting of pieces
 
