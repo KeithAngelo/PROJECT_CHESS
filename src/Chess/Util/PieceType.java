@@ -2,7 +2,7 @@ package Chess.Util;
 
 public enum PieceType{
     PAWN(1), 
-    KING(12), 
+    KING(1), 
     QUEEN(8), 
     BISHOP(3), 
     ROOK(5), 
