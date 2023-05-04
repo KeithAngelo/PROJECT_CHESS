@@ -324,13 +324,15 @@ public class ChessBot {
     //this method is disgusting
     private LinkedList<ChessCoor> PiecePossibleMoves(ChessBoard myBoard, ChessCoor initCoor){
         LinkedList<ChessCoor> possMoves = new LinkedList<>();
-        for(int X = 0; X < 8; X++){
-            for(int Y = 0; Y < 8; Y++){
-                ChessBoard testBoard = new ChessBoard(myBoard);
-                if(testBoard.Move(initCoor, new ChessCoor(X, Y))){
-                    possMoves.push(new ChessCoor(X, Y));
+
+        ChessPiece currPiece = myBoard.peekPieceAt(initCoor.getX(), initCoor.getY());
+        ArrayList<ChessCoor> possibleMoves = currPiece.GetPotentialMoves(myBoard, initCoor);
+
+        for(ChessCoor newCoor : possibleMoves){
+            ChessBoard testBoard = new ChessBoard(myBoard);      
+                if(testBoard.Move(initCoor, newCoor)){
+                    possMoves.push(newCoor);
                 }
-            }
         }
         return possMoves;
     }
