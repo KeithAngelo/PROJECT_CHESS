@@ -111,7 +111,7 @@ public class ChessBot {
         PieceColor currentColor = currBoard.TurnColor;
 
         if(depth <= 0){
-            return EvaluatePosition(currGame);
+            return heavyEvaluation(currGame);
         }
 
         LinkedList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
@@ -126,7 +126,7 @@ public class ChessBot {
                 newGame.Move(CoorPair[0],CoorPair[1]);
     
                 if(newGame.currentBoard.isCheckMated()){
-                    return EvaluatePosition(newGame);
+                    return heavyEvaluation(newGame);
                 }
     
                 if(newGame.currentBoard.isDraw()){
@@ -158,7 +158,7 @@ public class ChessBot {
                 newGame.Move(CoorPair[0],CoorPair[1]);
     
                 if(newGame.currentBoard.isCheckMated()){
-                    return EvaluatePosition(newGame);
+                    return heavyEvaluation(newGame);
                 }
     
                 if(newGame.currentBoard.isDraw()){
@@ -186,9 +186,8 @@ public class ChessBot {
             
         }
     }
-    
-    //If positive num, it is good for the bot color, and vice versa
-    public int EvaluatePosition(Game thisGame){
+
+    private int heavyEvaluation(Game thisGame){
         MovesEvaluated++;
 
         ChessBoard thisBoard = thisGame.currentBoard;
@@ -219,17 +218,22 @@ public class ChessBot {
         int CaptureScore = 0;
         int CaptureWeight = 15;
         // System.out.println("-----------------------");
-        for(Map.Entry<ChessPiece, ChessCoor> entry : thisBoard.PieceMap.entrySet()){
-            
-            ChessPiece currPiece = entry.getKey();
-            // System.out.printf("%s %s at X%d  Y%d\n",currPiece.getColor(), currPiece.getType(),entry.getValue().getX(),entry.getValue().getY());
+
+        for(int square = 0; square < 64 ; square++){
+            int X = toCoor(square).getX();
+            int Y = toCoor(square).getY();
+
+            ChessPiece currPiece = thisBoard.board[X][Y];
+            if(currPiece == null){
+                continue;
+            }
             if(currPiece.getColor() == BOTColor){
 
                 //Add to Weighted Score
                 BoardPiecesBonus = BoardPiecesBonus + currPiece.getType().getWeight();
 
                 //Capture Score
-                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(entry.getValue().getX(),entry.getValue().getY());
+                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(X,Y);
 
                 if(PreviousPiece == null){
                     continue;
@@ -249,7 +253,7 @@ public class ChessBot {
                 OpponentBoardScore = OpponentBoardScore + currPiece.getType().getWeight();
 
                 //Capture Score
-                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(entry.getValue().getX(),entry.getValue().getY());
+                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(X,Y);
 
                 if(PreviousPiece == null){
                     continue;
@@ -261,6 +265,9 @@ public class ChessBot {
                 CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
 
             }
+
+
+
         }
         // System.out.println("-----------------------");
 
@@ -367,5 +374,13 @@ public class ChessBot {
 
         return generatedMove;
     }
+
+    private ChessCoor toCoor(int number){
+        int Y = number % 8;
+        int X = (number - Y) / 8;
+
+        return new ChessCoor(X, Y);
+    }
+
 
 }
