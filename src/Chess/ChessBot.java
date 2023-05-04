@@ -217,11 +217,14 @@ public class ChessBot {
 
         int CaptureScore = 0;
         int CaptureWeight = 15;
-        // System.out.println("-----------------------");
+        
+        int HangingScore = 0;
+        int HangingWeight  = 30;
 
         for(int square = 0; square < 64 ; square++){
-            int X = toCoor(square).getX();
-            int Y = toCoor(square).getY();
+            ChessCoor currCoor = toCoor(square);
+            int X = currCoor.getX();
+            int Y = currCoor.getY();
 
             ChessPiece currPiece = thisBoard.board[X][Y];
             if(currPiece == null){
@@ -243,6 +246,14 @@ public class ChessBot {
                     continue;
                 }
                 CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
+                
+
+                int protectionScore = 0;
+                for(PieceType type : PiecesDefending(thisBoard, currCoor)){
+                    protectionScore = protectionScore + type.getWeight();
+                }
+
+                HangingScore =  protectionScore - currPiece.getType().getWeight();
                 
             }
 
@@ -281,7 +292,27 @@ public class ChessBot {
         // System.out.println("PiecesScore is "+PiecesScore);
         
 
-        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight);
+        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight) + (HangingScore*HangingWeight);
+    }
+
+    private ArrayList<PieceType> PiecesDefending(ChessBoard curBoard, ChessCoor pieceCoor){
+        ArrayList<PieceType> output = new ArrayList<>();
+        ChessPiece currPiece = curBoard.board[pieceCoor.getX()][pieceCoor.getY()];
+
+        for(int n = 0; n < 64; n++){
+            ChessCoor Checkcoor = toCoor(n);
+            ChessPiece newPiece = curBoard.board[Checkcoor.getX()][Checkcoor.getY()];
+
+            if(newPiece == null || (newPiece.getColor() != currPiece.getColor())){
+                continue;
+            }
+
+            if(pieceCoor.isContainedIn(newPiece.GetControlledSquares(curBoard, Checkcoor))){
+                output.add(newPiece.getType());
+            }
+
+        }
+        return output;
     }
 
     private LinkedList<ChessCoor[]> generatePosPairMoves(ChessBoard currBoard, PieceColor currentColor){
