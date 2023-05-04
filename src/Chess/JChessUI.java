@@ -103,8 +103,6 @@ public class JChessUI extends JPanel{
 
             }
 
-            
-
             //Generate Squares Checker pattern Coloring
             this.setBackground(WhiteSquares);
             if(XCoor % 2 ==0 ){

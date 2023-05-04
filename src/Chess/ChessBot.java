@@ -18,16 +18,6 @@ public class ChessBot {
         BOTColor = botColor;
     }
 
-    class MovePackage{
-        ChessCoor[] MovePair;
-        Double moveEvaluation;
-
-
-        MovePackage(ChessCoor[] MovePair, Double moveEvaluation){
-            this.MovePair = MovePair;
-            this.moveEvaluation = moveEvaluation;
-        }
-    }
 
 
     int MovesEvaluated = 0;
