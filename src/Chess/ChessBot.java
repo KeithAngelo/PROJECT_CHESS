@@ -218,12 +218,9 @@ public class ChessBot {
         int CaptureWeight = 15;
         // System.out.println("-----------------------");
 
-        PieceColor colorCheck = PieceColor.WHITE;
+
         //Switches black to white, kinda brain dead but i hate you
-        for(int x = 0; x < 2; x++){
-            if(x == 1){
-                colorCheck = PieceColor.BLACK;
-            }
+        for(PieceColor colorCheck : PieceColor.getColors()){
             
             for(PieceNode currNode : thisBoard.pieceMappings.getPieces(colorCheck)){
                 
