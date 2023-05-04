@@ -221,6 +221,9 @@ public class ChessBot {
         int HangingScore = 0;
         int HangingWeight  = 30;
 
+        int AttackScore = 0;
+        int AttackWeight = 30;
+
         for(int square = 0; square < 64 ; square++){
             ChessCoor currCoor = toCoor(square);
             int X = currCoor.getX();
@@ -254,6 +257,13 @@ public class ChessBot {
                 }
 
                 HangingScore =  protectionScore - currPiece.getType().getWeight();
+                
+                int threatenScore = 0;
+                for(PieceType type : PiecesAttacking(thisBoard, currCoor)){
+                    threatenScore = threatenScore + (10 - type.getWeight());
+                }
+
+                AttackScore = -1 * (currPiece.getType().getWeight()*threatenScore );
                 
             }
 
@@ -292,7 +302,28 @@ public class ChessBot {
         // System.out.println("PiecesScore is "+PiecesScore);
         
 
-        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight) + (HangingScore*HangingWeight);
+        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight) + (HangingScore*HangingWeight) + (AttackScore*AttackWeight);
+    }
+
+    private ArrayList<PieceType> PiecesAttacking(ChessBoard curBoard, ChessCoor pieceCoor){
+        ArrayList<PieceType> output = new ArrayList<>();
+        ChessPiece currPiece = curBoard.board[pieceCoor.getX()][pieceCoor.getY()];
+
+        for(int n = 0; n < 64; n++){
+            ChessCoor Checkcoor = toCoor(n);
+            ChessPiece newPiece = curBoard.board[Checkcoor.getX()][Checkcoor.getY()];
+
+            if(newPiece == null || (newPiece.getColor() == currPiece.getColor())){
+                continue;
+            }
+
+            if(pieceCoor.isContainedIn(newPiece.GetControlledSquares(curBoard, Checkcoor))){
+                output.add(newPiece.getType());
+            }
+
+        }
+        return output;
+
     }
 
     private ArrayList<PieceType> PiecesDefending(ChessBoard curBoard, ChessCoor pieceCoor){
