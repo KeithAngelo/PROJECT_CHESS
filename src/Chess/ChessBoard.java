@@ -161,11 +161,23 @@ public class ChessBoard {
         }
 
         public boolean remove(ChessPiece piece){
+            Iterator<PieceNode> iterator;
+
             if(piece.getColor() == PieceColor.WHITE){
-                return WhitePieces.remove(piece);
+                iterator = WhitePieces.iterator();
             }else{
-                return BlackPieces.remove(piece);
+                iterator = BlackPieces.iterator();
             }
+
+            while(iterator.hasNext()){
+                
+                if(iterator.next().piece == piece){
+                    iterator.remove();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public int numOfPieces(PieceColor color){
