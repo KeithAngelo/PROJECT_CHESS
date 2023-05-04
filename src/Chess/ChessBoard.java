@@ -59,7 +59,7 @@ public class ChessBoard {
 
         //create duplicate hashMap
         for(Map.Entry<ChessPiece, ChessCoor> MapEntry : copyChessBoard.PieceMap.entrySet()){
-            this.PieceMap.put(ChessPiece.copyPiece(MapEntry.getKey()), MapEntry.getValue());
+            this.PieceMap.put(MapEntry.getKey(), MapEntry.getValue());
         }
 
         this.TurnColor = copyChessBoard.TurnColor;
