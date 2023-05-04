@@ -327,8 +327,8 @@ public class ChessBoard {
         putAtSquare(new Bishop(PieceColor.WHITE), new ChessCoor(2, 7));
         putAtSquare(new Bishop(PieceColor.WHITE), new ChessCoor(5, 7));
 
-        putAtSquare(new Queen(PieceColor.WHITE), new ChessCoor(4, 7));
-        putAtSquare(new King(PieceColor.WHITE), new ChessCoor(3, 7));
+        putAtSquare(new Queen(PieceColor.WHITE), new ChessCoor(3, 7));
+        putAtSquare(new King(PieceColor.WHITE), new ChessCoor(4, 7));
 
     }
 

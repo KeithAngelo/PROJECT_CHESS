@@ -1,11 +1,8 @@
 package Chess;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Random;
 
 import Chess.ChessBoard.PieceMappings.PieceNode;
@@ -318,16 +315,43 @@ public class ChessBot {
             }
         }
 
+        // for(PieceColor AColor : PieceColor.getColors()){
+        //     for(PieceNode currNode : currBoard.pieceMappings.getPieces(AColor)){
+        //         int initX = currNode.coor.getX();
+        //         int initY = currNode.coor.getY();
+
+        //         ChessPiece currPiece = currNode.piece;
+        //         if( currPiece== null){
+        //             continue;
+        //         }
+
+        //         if(currPiece.getColor() != currentColor){
+        //             continue;
+        //         }
+
+        //         LinkedList<ChessCoor> possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
+
+        //         if(possiblePieceMoves.isEmpty()){
+        //             continue;
+        //         }
+
+        //         for(ChessCoor newCoor : possiblePieceMoves){
+        //             ChessCoor[] pairOfCoors = new ChessCoor[2];
+        //             pairOfCoors[0] = new ChessCoor(initX , initY);
+        //             pairOfCoors[1] = newCoor;
+        //             possiblePairMoves.push(pairOfCoors);
+        //         }
+        //     }
+        // }
+
+        
         return possiblePairMoves;
     }
 
-    //this method is disgusting
     private LinkedList<ChessCoor> PiecePossibleMoves(ChessBoard myBoard, ChessCoor initCoor){
         LinkedList<ChessCoor> possMoves = new LinkedList<>();
-
         ChessPiece currPiece = myBoard.peekPieceAt(initCoor.getX(), initCoor.getY());
         ArrayList<ChessCoor> possibleMoves = currPiece.GetPotentialMoves(myBoard, initCoor);
-
         for(ChessCoor newCoor : possibleMoves){
             ChessBoard testBoard = new ChessBoard(myBoard);      
                 if(testBoard.Move(initCoor, newCoor)){
