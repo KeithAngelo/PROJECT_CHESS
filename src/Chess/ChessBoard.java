@@ -51,10 +51,7 @@ public class ChessBoard {
                 if(copyChessBoard.board[X][Y] == null){
                     this.board[X][Y] = null;
                 }else{
-
-                    PieceColor thisColor = copyChessBoard.board[X][Y].getColor();
-                    PieceType thisType = copyChessBoard.board[X][Y].getType();
-                    this.board[X][Y] = ChessPiece.getNewPiece(thisColor, thisType);
+                    this.board[X][Y] = ChessPiece.copyPiece(copyChessBoard.board[X][Y]);
                 }
                 
             }
@@ -62,8 +59,7 @@ public class ChessBoard {
 
         //create duplicate hashMap
         for(Map.Entry<ChessPiece, ChessCoor> MapEntry : copyChessBoard.PieceMap.entrySet()){
-            ChessPiece newPiece = ChessPiece.getNewPiece(MapEntry.getKey().getColor(), MapEntry.getKey().getType());
-            this.PieceMap.put(newPiece, MapEntry.getValue());
+            this.PieceMap.put(ChessPiece.copyPiece(MapEntry.getKey()), MapEntry.getValue());
         }
 
         this.TurnColor = copyChessBoard.TurnColor;

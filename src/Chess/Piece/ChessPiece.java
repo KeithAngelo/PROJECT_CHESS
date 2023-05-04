@@ -94,6 +94,39 @@ abstract public class ChessPiece implements PieceActions{
             
         }
     }
+
+    public static ChessPiece copyPiece(ChessPiece oldPiece){
+        PieceColor color = oldPiece.getColor();
+        PieceType type = oldPiece.getType();
+
+        ChessPiece newPiece;
+        switch(type){
+            case BISHOP:
+                newPiece = new Bishop(color);
+            break;
+            case KING:
+                newPiece = new King(color);
+            break;
+            case KNIGHT:
+                newPiece = new Knight(color);
+            break;
+            case PAWN:
+                newPiece = new Pawn(color);
+            break;
+            case QUEEN:
+                newPiece = new Queen(color);
+            break;
+            case ROOK:
+                newPiece = new Rook(color);
+            break;
+            default:
+                throw new IllegalAccessError();
+            
+        }
+        newPiece.hasMoved = oldPiece.hasMoved;
+
+        return newPiece;
+    }
 }
 
 
