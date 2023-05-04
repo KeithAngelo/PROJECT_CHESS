@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
+import Chess.ChessBoard.PieceMappings.PieceNode;
 import Chess.Piece.ChessPiece;
 import Chess.Util.*;
 
@@ -219,50 +220,60 @@ public class ChessBot {
         int CaptureScore = 0;
         int CaptureWeight = 15;
         // System.out.println("-----------------------");
-        for(Map.Entry<ChessPiece, ChessCoor> entry : thisBoard.PieceMap.entrySet()){
-            
-            ChessPiece currPiece = entry.getKey();
-            // System.out.printf("%s %s at X%d  Y%d\n",currPiece.getColor(), currPiece.getType(),entry.getValue().getX(),entry.getValue().getY());
-            if(currPiece.getColor() == BOTColor){
 
-                //Add to Weighted Score
-                BoardPiecesBonus = BoardPiecesBonus + currPiece.getType().getWeight();
-
-                //Capture Score
-                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(entry.getValue().getX(),entry.getValue().getY());
-
-                if(PreviousPiece == null){
-                    continue;
-                }
-
-                if(PreviousPiece.getColor() == BOTColor){
-                    continue;
-                }
-                CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
-                
+        PieceColor colorCheck = PieceColor.WHITE;
+        //Switches black to white, kinda brain dead but i hate you
+        for(int x = 0; x < 2; x++){
+            if(x == 1){
+                colorCheck = PieceColor.BLACK;
             }
+            
+            for(PieceNode currNode : thisBoard.pieceMappings.getPieces(colorCheck)){
+                
+                ChessPiece currPiece = currNode.piece;
+                int X = currNode.coor.getX();
+                int Y = currNode.coor.getY();
+                if(currPiece.getColor() == BOTColor){
 
-            //Check if opponent has eaten bot piece
-            else{
+                    //Add to Weighted Score
+                    BoardPiecesBonus = BoardPiecesBonus + currPiece.getType().getWeight();
 
-                //Add to weighted Score
-                OpponentBoardScore = OpponentBoardScore + currPiece.getType().getWeight();
+                    //Capture Score
+                    ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(X,Y);
 
-                //Capture Score
-                ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(entry.getValue().getX(),entry.getValue().getY());
+                    if(PreviousPiece == null){
+                        continue;
+                    }
 
-                if(PreviousPiece == null){
-                    continue;
+                    if(PreviousPiece.getColor() == BOTColor){
+                        continue;
+                    }
+                    CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
+                    
                 }
 
-                if(PreviousPiece.getColor() != BOTColor){
-                    continue;
-                }
-                CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
+                //Check if opponent has eaten bot piece
+                else{
 
+                    //Add to weighted Score
+                    OpponentBoardScore = OpponentBoardScore + currPiece.getType().getWeight();
+
+                    //Capture Score
+                    ChessPiece PreviousPiece = thisGame.BoardHistory.get(1).peekPieceAt(X,Y);
+
+                    if(PreviousPiece == null){
+                        continue;
+                    }
+
+                    if(PreviousPiece.getColor() != BOTColor){
+                        continue;
+                    }
+                    CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
+
+                }
             }
         }
-        // System.out.println("-----------------------");
+
 
 
         //TODO : Generate small punishment for hanging pieces
