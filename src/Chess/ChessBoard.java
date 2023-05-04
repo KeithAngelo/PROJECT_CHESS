@@ -51,31 +51,10 @@ public class ChessBoard {
                 if(copyChessBoard.board[X][Y] == null){
                     this.board[X][Y] = null;
                 }else{
-                    switch(copyChessBoard.board[X][Y].type){
-                        case PAWN:
-                        this.board[X][Y] = new Pawn(copyChessBoard.board[X][Y]);
-                        break;
-    
-                        case BISHOP:
-                        this.board[X][Y] = new Bishop(copyChessBoard.board[X][Y]);
-                        break;
-    
-                        case KNIGHT:
-                        this.board[X][Y] = new Knight(copyChessBoard.board[X][Y]);
-                        break;
-                        
-                        case ROOK:
-                        this.board[X][Y] = new Rook(copyChessBoard.board[X][Y]);
-                        break;
-    
-                        case QUEEN:
-                        this.board[X][Y] = new Queen(copyChessBoard.board[X][Y]);
-                        break;
-    
-                        case KING:
-                        this.board[X][Y] = new King(copyChessBoard.board[X][Y]);
-                        break;
-                    }
+
+                    PieceColor thisColor = copyChessBoard.board[X][Y].getColor();
+                    PieceType thisType = copyChessBoard.board[X][Y].getType();
+                    this.board[X][Y] = ChessPiece.getNewPiece(thisColor, thisType);
                 }
                 
             }
@@ -83,7 +62,8 @@ public class ChessBoard {
 
         //create duplicate hashMap
         for(Map.Entry<ChessPiece, ChessCoor> MapEntry : copyChessBoard.PieceMap.entrySet()){
-            this.PieceMap.put(MapEntry.getKey(), MapEntry.getValue());
+            ChessPiece newPiece = ChessPiece.getNewPiece(MapEntry.getKey().getColor(), MapEntry.getKey().getType());
+            this.PieceMap.put(newPiece, MapEntry.getValue());
         }
 
         this.TurnColor = copyChessBoard.TurnColor;

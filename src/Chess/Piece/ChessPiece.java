@@ -74,6 +74,26 @@ abstract public class ChessPiece implements PieceActions{
     boolean isWithinBounds(ChessBoard currentBoard, int CoorX, int CoorY){
         return !( (CoorX < 0 || CoorY < 0) || (CoorX > 7 || CoorY > 7) );
     }
+
+    public static ChessPiece getNewPiece(PieceColor color, PieceType type){
+        switch(type){
+            case BISHOP:
+                return new Bishop(color);
+            case KING:
+                return new King(color);
+            case KNIGHT:
+                return new Knight(color);
+            case PAWN:
+                return new Pawn(color);
+            case QUEEN:
+                return new Queen(color);
+            case ROOK:
+                return new Rook(color);
+            default:
+                throw new IllegalAccessError();
+            
+        }
+    }
 }
 
 
