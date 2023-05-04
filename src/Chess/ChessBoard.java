@@ -42,6 +42,14 @@ public class ChessBoard {
         public ChessCoor Black_KingCoors;
         public ChessCoor White_KingCoors;
 
+        public ChessCoor getKingCoor(PieceColor color){
+            if(color == PieceColor.WHITE){
+                return White_KingCoors;
+            }else{
+                return Black_KingCoors;
+            }
+        }
+
         LinkedList<PieceNode> BlackPieces = new LinkedList<>();
         LinkedList<PieceNode> WhitePieces = new LinkedList<>();
 
@@ -136,6 +144,14 @@ public class ChessBoard {
                 iterator = WhitePieces.iterator();
             }else{
                 iterator = BlackPieces.iterator();
+            }
+
+            if(piece.getType() == PieceType.KING){
+                if(piece.getColor() == PieceColor.WHITE){
+                    White_KingCoors = newCoor;
+                }else{
+                    Black_KingCoors = newCoor;
+                }
             }
 
             while(iterator.hasNext()){
@@ -462,7 +478,7 @@ public class ChessBoard {
         // }
 
         if(futureBoard.isShortCastleMove(initialCoor, NewCoor)){
-            futureBoard.board[NewCoor.getX()][NewCoor.getY()] = futureBoard.board[initialCoor.getX()][initialCoor.getY()];
+            futureBoard.putAtSquare(futureBoard.board[initialCoor.getX()][initialCoor.getY()], NewCoor);
             futureBoard.board[initialCoor.getX()][initialCoor.getY()] = null;
 
             int YCoor;
@@ -472,7 +488,7 @@ public class ChessBoard {
                 YCoor = 0;
             }
 
-            futureBoard.board[5][YCoor] = futureBoard.board[7][YCoor];
+            futureBoard.putAtSquare(futureBoard.board[7][YCoor], new ChessCoor(5, YCoor));
             futureBoard.board[7][YCoor] = null;
 
             futureBoard.NextTurn();
@@ -480,7 +496,8 @@ public class ChessBoard {
         }
 
         if(futureBoard.isLongCastleMove(initialCoor, NewCoor)){
-            futureBoard.board[NewCoor.getX()][NewCoor.getY()] = futureBoard.board[initialCoor.getX()][initialCoor.getY()];
+            
+            futureBoard.putAtSquare(futureBoard.board[initialCoor.getX()][initialCoor.getY()], NewCoor);
             futureBoard.board[initialCoor.getX()][initialCoor.getY()] = null;
 
             int YCoor;
@@ -490,14 +507,14 @@ public class ChessBoard {
                 YCoor = 0;
             }
 
-            futureBoard.board[3][YCoor] = futureBoard.board[0][YCoor];
+            futureBoard.putAtSquare(futureBoard.board[0][YCoor], NewCoor);
             futureBoard.board[0][YCoor] = null;
 
             futureBoard.NextTurn();
             return futureBoard;
         }
 
-        futureBoard.board[NewCoor.getX()][NewCoor.getY()] = futureBoard.board[initialCoor.getX()][initialCoor.getY()];
+        futureBoard.putAtSquare(futureBoard.board[initialCoor.getX()][initialCoor.getY()], NewCoor);
         futureBoard.board[initialCoor.getX()][initialCoor.getY()] = null;
 
         futureBoard.NextTurn();
@@ -530,11 +547,11 @@ public class ChessBoard {
     public boolean isCheckMated(){
         // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
-        ChessCoor KingCoors = KingCoords()[0];
+        ChessCoor KingCoors = pieceMappings.getKingCoor(PieceColor.getOther(TurnColor));
 
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
-        ChessCoor OtherKingCoors = KingCoords()[1];
+        ChessCoor OtherKingCoors = pieceMappings.getKingCoor(TurnColor);
 
         King OtherCurrentKing = (King) board[OtherKingCoors.getX()][OtherKingCoors.getY()];
 
@@ -544,7 +561,7 @@ public class ChessBoard {
     public boolean isDraw(){
         // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
-        ChessCoor KingCoors = KingCoords()[0];
+        ChessCoor KingCoors = pieceMappings.getKingCoor(TurnColor);
 
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
@@ -554,11 +571,11 @@ public class ChessBoard {
     public boolean isChecked(){
         // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
-        ChessCoor KingCoors = KingCoords()[0];
+        ChessCoor KingCoors = pieceMappings.getKingCoor(PieceColor.getOther(TurnColor));
 
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
-        ChessCoor OtherKingCoors = KingCoords()[1];
+        ChessCoor OtherKingCoors = pieceMappings.getKingCoor(TurnColor);
 
         King OtherCurrentKing = (King) board[OtherKingCoors.getX()][OtherKingCoors.getY()];
 
@@ -566,53 +583,53 @@ public class ChessBoard {
     }
 
     public boolean selfIsChecked(){
-            ChessCoor KingCoors = KingCoords()[1];
+        ChessCoor KingCoors = pieceMappings.getKingCoor(PieceColor.getOther(TurnColor));
         King CurrentKing = (King) board[KingCoors.getX()][KingCoors.getY()];
 
         return CurrentKing.isChecked(this, KingCoors);
     }
 
     //returns an array with 2 coordinates of the two kings
-    private ChessCoor[] KingCoords(){
-        ChessCoor[] pairOfKingCoords = new ChessCoor[2];
-        for(int X = 0; X < 8; X++){
-            for(int Y = 0; Y < 8; Y++){
-                if(board[X][Y] == null){
-                    continue;
-                }
+    // private ChessCoor[] KingCoords(){
+    //     ChessCoor[] pairOfKingCoords = new ChessCoor[2];
+    //     for(int X = 0; X < 8; X++){
+    //         for(int Y = 0; Y < 8; Y++){
+    //             if(board[X][Y] == null){
+    //                 continue;
+    //             }
 
-                if(board[X][Y].getColor() != this.TurnColor){
-                    continue;
-                }
+    //             if(board[X][Y].getColor() != this.TurnColor){
+    //                 continue;
+    //             }
 
-                if(board[X][Y].getType() == PieceType.KING){
-                    pairOfKingCoords[0] = new ChessCoor(X, Y);
-                    X = 8;
-                    break;
-                }
-            }
-        }
+    //             if(board[X][Y].getType() == PieceType.KING){
+    //                 pairOfKingCoords[0] = new ChessCoor(X, Y);
+    //                 X = 8;
+    //                 break;
+    //             }
+    //         }
+    //     }
 
-        for(int X = 0; X < 8; X++){
-            for(int Y = 0; Y < 8; Y++){
-                if(board[X][Y] == null){
-                    continue;
-                }
+    //     for(int X = 0; X < 8; X++){
+    //         for(int Y = 0; Y < 8; Y++){
+    //             if(board[X][Y] == null){
+    //                 continue;
+    //             }
 
-                if(board[X][Y].getColor() == this.TurnColor){
-                    continue;
-                }
+    //             if(board[X][Y].getColor() == this.TurnColor){
+    //                 continue;
+    //             }
 
-                if(board[X][Y].getType() == PieceType.KING){
-                    pairOfKingCoords[1] = new ChessCoor(X, Y);
-                    X = 8;
-                    break;
-                }
-            }
-        }
+    //             if(board[X][Y].getType() == PieceType.KING){
+    //                 pairOfKingCoords[1] = new ChessCoor(X, Y);
+    //                 X = 8;
+    //                 break;
+    //             }
+    //         }
+    //     }
 
-        return pairOfKingCoords;
-    }
+    //     return pairOfKingCoords;
+    // }
 
     public ChessCoor pawMustBePromoted(){
         int YCoorPromote;
