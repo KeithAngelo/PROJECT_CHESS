@@ -53,7 +53,7 @@ public class ChessBot {
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
 
-        ArrayList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
+        LinkedList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
         MovesTraversed = MovesTraversed + ListPossibleMoves.size();
 
 
@@ -114,7 +114,7 @@ public class ChessBot {
             return EvaluatePosition(currGame);
         }
 
-        ArrayList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
+        LinkedList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
         MovesTraversed = MovesTraversed + ListPossibleMoves.size();
         
         if(isMaximizing){
@@ -277,8 +277,8 @@ public class ChessBot {
         return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight);
     }
 
-    private ArrayList<ChessCoor[]> generatePosPairMoves(ChessBoard currBoard, PieceColor currentColor){
-        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
+    private LinkedList<ChessCoor[]> generatePosPairMoves(ChessBoard currBoard, PieceColor currentColor){
+        LinkedList<ChessCoor[]> possiblePairMoves = new LinkedList<>();
         
 
         for(int initX = 0; initX < 8; initX++){
@@ -292,8 +292,7 @@ public class ChessBot {
                     continue;
                 }
 
-                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
-                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
+                LinkedList<ChessCoor> possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
 
                 if(possiblePieceMoves.isEmpty()){
                     continue;
@@ -303,7 +302,7 @@ public class ChessBot {
                     ChessCoor[] pairOfCoors = new ChessCoor[2];
                     pairOfCoors[0] = new ChessCoor(initX , initY);
                     pairOfCoors[1] = newCoor;
-                    possiblePairMoves.add(pairOfCoors);
+                    possiblePairMoves.push(pairOfCoors);
                 }
             }
         }
@@ -312,13 +311,13 @@ public class ChessBot {
     }
 
     //this method is disgusting
-    private ArrayList<ChessCoor> PiecePossibleMoves(ChessBoard myBoard, ChessCoor initCoor){
-        ArrayList<ChessCoor> possMoves = new ArrayList<>();
+    private LinkedList<ChessCoor> PiecePossibleMoves(ChessBoard myBoard, ChessCoor initCoor){
+        LinkedList<ChessCoor> possMoves = new LinkedList<>();
         for(int X = 0; X < 8; X++){
             for(int Y = 0; Y < 8; Y++){
                 ChessBoard testBoard = new ChessBoard(myBoard);
                 if(testBoard.Move(initCoor, new ChessCoor(X, Y))){
-                    possMoves.add(new ChessCoor(X, Y));
+                    possMoves.push(new ChessCoor(X, Y));
                 }
             }
         }
@@ -345,8 +344,7 @@ public class ChessBot {
                     continue;
                 }
 
-                ArrayList<ChessCoor> possiblePieceMoves = new ArrayList<>();
-                possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
+                LinkedList<ChessCoor> possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
 
                 if(possiblePieceMoves.isEmpty()){
                     continue;
