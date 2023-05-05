@@ -111,6 +111,9 @@ public class ChessBot {
         PieceColor currentColor = currBoard.TurnColor;
 
         if(depth <= 0){
+            if(currGame.currentBoard.PreviousIsCapture){
+                return SearchAllCaptures(currGame, isMaximizing, alpha, beta);
+            }
             return heavyEvaluation(currGame);
         }
 
@@ -165,6 +168,87 @@ public class ChessBot {
                     return 0;
                 }
                 int ChildScore = RecursiveEvaluation(newGame, depth-1, true, alpha, beta);
+                if(ChildScore < minValue){
+                    minValue = ChildScore;
+                }
+
+                if(minValue < beta){
+                    beta = minValue;
+                }
+
+                if(beta <= alpha){
+                    MovesPruned++;
+                    break;
+                }
+    
+            
+            }
+
+            
+            return minValue;
+            
+        }
+    }
+
+    private int SearchAllCaptures(Game currGame, boolean isMaximizing, int alpha, int beta){
+        ChessBoard currBoard = currGame.currentBoard;
+        PieceColor currentColor = currBoard.TurnColor;
+
+        if(!currGame.currentBoard.PreviousIsCapture){
+            return heavyEvaluation(currGame);
+        }
+
+        LinkedList<ChessCoor[]> ListPossibleMoves = generatePosPairMoves(currBoard, currentColor);
+        MovesTraversed = MovesTraversed + ListPossibleMoves.size();
+        
+        if(isMaximizing){
+            int MaxValue = Integer.MIN_VALUE;
+
+            for(ChessCoor[] CoorPair : ListPossibleMoves){
+
+                Game newGame = new Game(currGame);
+                newGame.Move(CoorPair[0],CoorPair[1]);
+    
+                if(newGame.currentBoard.isCheckMated()){
+                    return heavyEvaluation(newGame);
+                }
+    
+                if(newGame.currentBoard.isDraw()){
+                    return 0;
+                }
+                int ChildScore = SearchAllCaptures(newGame,  false, alpha, beta);
+                if(ChildScore > MaxValue){
+                    MaxValue = ChildScore;
+                }
+
+                if(MaxValue > alpha){
+                    alpha = MaxValue;
+                }
+
+                if(beta <= alpha){
+                    MovesPruned++;
+                    break;
+                }
+
+            }
+
+            return MaxValue;
+        }else{
+            int minValue = Integer.MAX_VALUE;
+
+            for(ChessCoor[] CoorPair : ListPossibleMoves){
+
+                Game newGame = new Game(currGame);
+                newGame.Move(CoorPair[0],CoorPair[1]);
+    
+                if(newGame.currentBoard.isCheckMated()){
+                    return heavyEvaluation(newGame);
+                }
+    
+                if(newGame.currentBoard.isDraw()){
+                    return 0;
+                }
+                int ChildScore = SearchAllCaptures(newGame, true, alpha, beta);
                 if(ChildScore < minValue){
                     minValue = ChildScore;
                 }

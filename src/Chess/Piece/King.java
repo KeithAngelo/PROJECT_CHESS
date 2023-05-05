@@ -24,7 +24,7 @@ public class King extends ChessPiece{
         ArrayList<ChessCoor> NormMoves = NormalMoves(CurrentBoard, CurrentCoord);
 
         for(ChessCoor currNormalMoves : NormMoves){
-            if(!(currNormalMoves.isContainedIn(getEnemySquares(CurrentBoard)))){
+            if(!(currNormalMoves.isContainedIn(getEnemySquares(CurrentBoard, CurrentCoord)))){
                 PotentialCoords.add(currNormalMoves);
             }
         }
@@ -133,7 +133,7 @@ public class King extends ChessPiece{
     /* This will get coordinates where the enemy controls the squares.
      * This is needed since the king will note be able to move on these squares
      */
-    public ArrayList<ChessCoor> getEnemySquares(ChessBoard CurrentBoard){
+    public ArrayList<ChessCoor> getEnemySquares(ChessBoard CurrentBoard, ChessCoor CurentCoord){
         ArrayList<ChessCoor> EnemySquares = new ArrayList<>(); 
 
         for(int Y = 0; Y < 8; Y++){
@@ -162,7 +162,7 @@ public class King extends ChessPiece{
     
     public boolean isChecked(ChessBoard CurrentBoard, ChessCoor CurrentCoord){
         //TODO : When checking if the king is in check, you just have to check the straight lines, diagonals, pawns and knights
-        return CurrentCoord.isContainedIn(getEnemySquares(CurrentBoard));
+        return CurrentCoord.isContainedIn(getEnemySquares(CurrentBoard,CurrentCoord));
     }
 
 
