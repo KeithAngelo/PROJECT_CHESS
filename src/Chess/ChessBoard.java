@@ -340,6 +340,14 @@ public class ChessBoard {
             }
         }
 
+        ChessPiece.iterateAllPossibleMoves(CoorOfSquare, (X, Y) -> {
+            ChessBoard TestBoard = new ChessBoard(this);
+
+            if(TestBoard.Move(CoorOfSquare, new ChessCoor( X,Y))){
+                AllowedSquares.add(new ChessCoor(X, Y));
+            }
+        });
+
         return AllowedSquares;
     }
 

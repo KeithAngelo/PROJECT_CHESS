@@ -3,6 +3,7 @@ import Chess.Util.*;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 
@@ -125,6 +126,159 @@ abstract public class ChessPiece implements PieceActions{
 
         return newPiece;
     }
+
+
+    public static LinkedList<ChessCoor> iterateAllPossibleMoves(ChessCoor initCoor, MoveFactor moveFactor){
+        LinkedList<ChessCoor> allMoves = new LinkedList<>();
+
+        //LowerRight Moves
+        for(int Vector = 1; ; Vector++){
+            int VerticalVector = initCoor.getY() + Vector;
+            int HorizontalVector = initCoor.getX() + Vector;
+
+            //Add Diagonal Moves
+            if(VerticalVector < 8 && HorizontalVector < 8){
+                allMoves.add(new ChessCoor(HorizontalVector, VerticalVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(HorizontalVector, VerticalVector);
+                }
+            }
+
+            //Add Vertical Moves
+            if(VerticalVector < 8){
+                allMoves.add(new ChessCoor(initCoor.getX(), VerticalVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(initCoor.getX(), VerticalVector);
+                }
+            }
+
+            if(HorizontalVector < 8){
+                allMoves.add(new ChessCoor(HorizontalVector, initCoor.getY()));
+                if(moveFactor != null){
+                    moveFactor.doAction(HorizontalVector, initCoor.getY());
+                }
+            }
+
+            if(VerticalVector > 7 && HorizontalVector > 7){
+                break;
+            }
+        }
+
+        //UpperLeft Moves
+        for(int Vector = 1; ; Vector++){
+            int VerticalVector = initCoor.getY() - Vector;
+            int HorizontalVector = initCoor.getX() - Vector;
+
+            //Add Diagonal Moves
+            if(VerticalVector >= 0 && HorizontalVector >= 0){
+                allMoves.add(new ChessCoor(HorizontalVector, VerticalVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(HorizontalVector, VerticalVector);
+                }
+            }
+
+            //Add Vertical Moves
+            if(VerticalVector >= 0){
+                allMoves.add(new ChessCoor(initCoor.getX(), VerticalVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(initCoor.getX(), VerticalVector);
+                }
+            }
+
+            if(HorizontalVector >= 0){
+                allMoves.add(new ChessCoor(HorizontalVector, initCoor.getY()));
+                if(moveFactor != null){
+                    moveFactor.doAction(HorizontalVector, initCoor.getY());
+                }
+            }
+
+            if(VerticalVector < 0 && HorizontalVector < 0){
+                break;
+            }
+        }
+
+        //Knight Moves :
+
+        //East Moves
+        if(initCoor.getX() + 2 < 8){
+            int XVector = initCoor.getX() + 2;
+
+            if(initCoor.getY() + 1 < 8){
+                allMoves.add(new ChessCoor(XVector, initCoor.getY() + 1));
+                if(moveFactor != null){
+                    moveFactor.doAction(XVector, initCoor.getY() + 1);
+                }
+            }
+
+            if(initCoor.getY() - 1 >= 0){
+                allMoves.add(new ChessCoor(XVector, initCoor.getY() - 1));
+                if(moveFactor != null){
+                    moveFactor.doAction(XVector, initCoor.getY() - 1);
+                }
+            }
+        }
+
+        //West Moves
+        if(initCoor.getX() - 2 >= 0){
+            int XVector = initCoor.getX() - 2;
+
+            if(initCoor.getY() + 1 < 8){
+                allMoves.add(new ChessCoor(XVector, initCoor.getY() + 1));
+                if(moveFactor != null){
+                    moveFactor.doAction(XVector, initCoor.getY() + 1);
+                }
+            }
+
+            if(initCoor.getY() - 1 >= 0){
+                allMoves.add(new ChessCoor(XVector, initCoor.getY() - 1));
+                if(moveFactor != null){
+                    moveFactor.doAction(XVector, initCoor.getY() - 1);
+                }
+            }
+        }
+
+        //North Moves
+        if(initCoor.getY() - 2 >= 0){
+            int YVector = initCoor.getY() - 2;
+
+            if(initCoor.getX() + 1 < 8){
+                allMoves.add(new ChessCoor(initCoor.getX() + 1, YVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(initCoor.getX() + 1, YVector);
+                }
+            }
+
+            if(initCoor.getX() - 1 >= 0){
+                allMoves.add(new ChessCoor(initCoor.getX() - 1, YVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(initCoor.getX() - 1, YVector);
+                }
+            }
+        }
+
+        //South Moves
+        if(initCoor.getY() + 2 < 8){
+            int YVector = initCoor.getY() + 2;
+
+            if(initCoor.getX() + 1 < 8){
+                allMoves.add(new ChessCoor(initCoor.getX() + 1, YVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(initCoor.getX() + 1, YVector);
+                }
+            }
+
+            if(initCoor.getX() - 1 >= 0){
+                allMoves.add(new ChessCoor(initCoor.getX() - 1, YVector));
+                if(moveFactor != null){
+                    moveFactor.doAction(initCoor.getX() - 1, YVector);
+                }
+            }
+        }
+
+        return allMoves;
+    }
+
+    
 }
 
 
