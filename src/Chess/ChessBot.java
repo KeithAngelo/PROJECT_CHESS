@@ -248,7 +248,7 @@ public class ChessBot {
                 if(PreviousPiece.getColor() == BOTColor){
                     continue;
                 }
-                CaptureScore = 14 + CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
+                CaptureScore = CaptureScore + (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight());
                 
 
                 int protectionScore = 0;
@@ -283,7 +283,7 @@ public class ChessBot {
                 if(PreviousPiece.getColor() != BOTColor){
                     continue;
                 }
-                CaptureScore = CaptureScore + (-1 * (14 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
+                CaptureScore = CaptureScore + (-1 * (PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
 
             }
 
