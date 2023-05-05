@@ -437,6 +437,7 @@ public class ChessBot {
         for(int initX = 0; initX < 8; initX++){
             for(int initY = 0; initY < 8; initY++){
                 ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
+                ChessCoor currCoor = new ChessCoor(initX, initY);
                 if( currPiece== null){
                     continue;
                 }
@@ -457,6 +458,25 @@ public class ChessBot {
                     pairOfCoors[1] = newCoor;
                     possiblePairMoves.push(pairOfCoors);
                 }
+
+                //In theory this should be faster, but its way slower, and i dont know why
+
+                // ChessPiece.iterateAllPossibleMoves(currCoor, (X, Y)-> {
+                //     ChessCoor NewCoor = new ChessCoor(X, Y);
+                //     ChessBoard testBoard = new ChessBoard(currBoard);  
+                //     if(testBoard.Move(currCoor, NewCoor)){
+                //         ChessCoor[] pairOfCoors = new ChessCoor[2];
+                //         pairOfCoors[0] = currCoor;
+                //         pairOfCoors[1] = NewCoor;
+
+                //         if(testBoard.PreviousIsCapture || testBoard.isCheckMated()){
+                //             possiblePairMoves.push(pairOfCoors);
+                //         }else{
+                //             possiblePairMoves.add(pairOfCoors);
+                //         }
+                //     }
+                // });
+
             }
         }
 
@@ -471,7 +491,12 @@ public class ChessBot {
         for(ChessCoor newCoor : possibleMoves){
             ChessBoard testBoard = new ChessBoard(myBoard);      
                 if(testBoard.Move(initCoor, newCoor)){
-                    possMoves.push(newCoor);
+                    if(testBoard.PreviousIsCapture){
+                        possMoves.push(newCoor);
+                    }else{
+                        possMoves.add(newCoor);
+                    }
+                    
                 }
         }
         return possMoves;
