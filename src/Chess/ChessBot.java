@@ -112,7 +112,7 @@ public class ChessBot {
 
         if(depth <= 0){
             if(currGame.currentBoard.PreviousIsCapture){
-                return SearchAllCaptures(currGame, isMaximizing, alpha, beta);
+                return SearchAllCaptures(currGame, isMaximizing, alpha, beta, System.nanoTime());
             }
             return heavyEvaluation(currGame);
         }
@@ -190,11 +190,16 @@ public class ChessBot {
         }
     }
 
-    private int SearchAllCaptures(Game currGame, boolean isMaximizing, int alpha, int beta){
+    private int SearchAllCaptures(Game currGame, boolean isMaximizing, int alpha, int beta, long timeStart){
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
 
         if(!currGame.currentBoard.PreviousIsCapture){
+            return heavyEvaluation(currGame);
+        }
+
+        if((System.nanoTime() - timeStart)/1000000 > 5000){
+            System.out.println("SEARCH STOPPED");
             return heavyEvaluation(currGame);
         }
 
@@ -216,7 +221,7 @@ public class ChessBot {
                 if(newGame.currentBoard.isDraw()){
                     return 0;
                 }
-                int ChildScore = SearchAllCaptures(newGame,  false, alpha, beta);
+                int ChildScore = SearchAllCaptures(newGame,  false, alpha, beta, timeStart);
                 if(ChildScore > MaxValue){
                     MaxValue = ChildScore;
                 }
@@ -248,7 +253,7 @@ public class ChessBot {
                 if(newGame.currentBoard.isDraw()){
                     return 0;
                 }
-                int ChildScore = SearchAllCaptures(newGame, true, alpha, beta);
+                int ChildScore = SearchAllCaptures(newGame, true, alpha, beta, timeStart);
                 if(ChildScore < minValue){
                     minValue = ChildScore;
                 }
