@@ -2,7 +2,7 @@ package Chess.Util;
 
 public enum PieceType{
     PAWN(1), 
-    KING(1), 
+    KING(0), 
     QUEEN(8), 
     BISHOP(3), 
     ROOK(5), 
@@ -17,4 +17,6 @@ public enum PieceType{
     public int getWeight(){
         return PieceWeight;
     }
+
+    
 }
