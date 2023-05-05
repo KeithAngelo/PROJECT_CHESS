@@ -308,5 +308,56 @@ public class King extends ChessPiece{
         return NormalMoves;
     }
 
+    @Override
+    public int getMapColorScore(ChessCoor coor, int endGameFactor) {
+        //X and Y are Flipped, so to access value, it should be ValueTable[Y][X]
+        int X = coor.getX();
+        int Y = coor.getY();
+
+        if(color == PieceColor.BLACK){
+            Y = 7 - coor.getY();
+        }
+
+        int[][] ValueTable =  
+        {
+            {-30,-40,-40,-50,-50,-40,-40,-30},
+            {-30,-40,-40,-50,-50,-40,-40,-30},
+            {30,-40,-40,-50,-50,-40,-40,-30},
+            {-30,-40,-40,-50,-50,-40,-40,-30},
+            {-20,-30,-30,-40,-40,-30,-30,-20},
+            {-10,-20,-20,-20,-20,-20,-20,-10},
+            {5, 10, 10,-20,-20, 10, 10,  5},
+            {20, 20,  0,  0,  0,  0, 20, 20}
+        };
+
+        int[][] endGameTable = 
+        {
+            {-50,-40,-30,-20,-20,-30,-40,-50},
+            {-30,-20,-10,  0,  0,-10,-20,-30},
+            {-30,-10, 20, 30, 30, 20,-10,-30},
+            {-30,-10, 30, 40, 40, 30,-10,-30},
+            {-30,-10, 30, 40, 40, 30,-10,-30},
+            {-30,-10, 20, 30, 30, 20,-10,-30},
+            {-30,-30,  0,  0,  0,  0,-30,-30},
+            {-50,-30,-30,-30,-30,-30,-30,-50}
+        };
+        
+        if(endGameFactor > 45){
+            return ValueTable[Y][X];
+        }
+
+        //Will return a score between the end game and mid game score depending on how little pieces left
+        if(endGameFactor <= 45 && endGameFactor > 25){
+            int endScore = 64 - endGameFactor;
+
+            int MidValue = ValueTable[Y][X]*endGameFactor;
+            int endValue = endGameTable[Y][X]*endScore;
+
+            return (MidValue + endValue) / 64;
+        }
+        
+        return endGameTable[Y][X];
+    }
+
 
 }

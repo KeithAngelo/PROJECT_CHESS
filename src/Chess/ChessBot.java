@@ -24,6 +24,7 @@ public class ChessBot {
     int MovesTraversed = 0;
     int MovesPruned = 0;
     int FinalEvaluation = 0;
+    int SearchCalls = 0;
     //This will return an array of 2 ChessCoor.
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
@@ -31,6 +32,7 @@ public class ChessBot {
         MovesTraversed = 0;
         MovesPruned = 0;
         FinalEvaluation = 0;
+        SearchCalls = 0;
 
         long start = System.nanoTime();
 
@@ -43,6 +45,7 @@ public class ChessBot {
         System.out.println("Moves Evaluated : "+MovesEvaluated);
         System.out.println("Moves Traversed : "+MovesTraversed);
         System.out.println("Final Evaluation : "+FinalEvaluation);
+        System.out.println("Capture Evaluations : "+SearchCalls);
         System.out.println("Moves Pruned : "+MovesPruned+"\n\n\n");
         return output;
 
@@ -69,7 +72,7 @@ public class ChessBot {
             newGame.Move(CoorPair[0],CoorPair[1]);
 
 
-            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, System.nanoTime());
 
             ScoreMap.put(CoorPair, newEval);
 
@@ -101,7 +104,7 @@ public class ChessBot {
     }
  
     // This will return the score of the worst case 
-    private int RecursiveEvaluation(Game currGame, int depth, boolean isMaximizing, int alpha, int beta){
+    private int RecursiveEvaluation(Game currGame, int depth, boolean isMaximizing, int alpha, int beta , long TimeStart){
 
         //TODO : Implement Alpha beta pruning
 
@@ -111,7 +114,7 @@ public class ChessBot {
         PieceColor currentColor = currBoard.TurnColor;
 
         if(depth <= 0){
-            if(currGame.currentBoard.PreviousIsCapture){
+            if(currGame.currentBoard.PreviousIsCapture && (System.nanoTime() - TimeStart)/1000000 < 70000){
                 return SearchAllCaptures(currGame, isMaximizing, alpha, beta, System.nanoTime());
             }
             return heavyEvaluation(currGame);
@@ -135,7 +138,7 @@ public class ChessBot {
                 if(newGame.currentBoard.isDraw()){
                     return 0;
                 }
-                int ChildScore = RecursiveEvaluation(newGame, depth-1, false, alpha, beta);
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, false, alpha, beta, TimeStart);
                 if(ChildScore > MaxValue){
                     MaxValue = ChildScore;
                 }
@@ -167,7 +170,7 @@ public class ChessBot {
                 if(newGame.currentBoard.isDraw()){
                     return 0;
                 }
-                int ChildScore = RecursiveEvaluation(newGame, depth-1, true, alpha, beta);
+                int ChildScore = RecursiveEvaluation(newGame, depth-1, true, alpha, beta, TimeStart);
                 if(ChildScore < minValue){
                     minValue = ChildScore;
                 }
@@ -191,14 +194,17 @@ public class ChessBot {
     }
 
     private int SearchAllCaptures(Game currGame, boolean isMaximizing, int alpha, int beta, long timeStart){
+        
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
 
         if(!currGame.currentBoard.PreviousIsCapture){
+            SearchCalls++;
             return heavyEvaluation(currGame);
         }
 
-        if((System.nanoTime() - timeStart)/1000000 > 5000){
+        if((System.nanoTime() - timeStart)/1000000 > 100){
+            SearchCalls++;
             System.out.println("SEARCH STOPPED");
             return heavyEvaluation(currGame);
         }
@@ -275,7 +281,7 @@ public class ChessBot {
             
         }
     }
-
+    int ControlScore = 0;
     private int heavyEvaluation(Game thisGame){
         MovesEvaluated++;
 
@@ -312,6 +318,12 @@ public class ChessBot {
 
         int AttackScore = 0;
         int AttackWeight = 30;
+
+        ControlScore = 0;
+        int ControlWeight = 1;
+
+        int pieceFactor = 0;
+        int pieceFactorWeight = 1;
 
         for(int square = 0; square < 64 ; square++){
             ChessCoor currCoor = toCoor(square);
@@ -352,7 +364,9 @@ public class ChessBot {
                     threatenScore = threatenScore + (10 - type.getWeight());
                 }
 
-                AttackScore = -1 * (currPiece.getType().getWeight()*threatenScore );
+                AttackScore = AttackScore - (currPiece.getType().getWeight()*threatenScore );
+
+                pieceFactor = pieceFactor + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces);
                 
             }
 
@@ -374,6 +388,22 @@ public class ChessBot {
                 }
                 CaptureScore = CaptureScore + (-1 * (8 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
 
+                // int protectionScore = 0;
+                // for(PieceType type : PiecesDefending(thisBoard, currCoor)){
+                //     protectionScore = protectionScore + type.getWeight();
+                // }
+
+                // HangingScore =  protectionScore + currPiece.getType().getWeight();
+                
+                // int threatenScore = 0;
+                // for(PieceType type : PiecesAttacking(thisBoard, currCoor)){
+                //     threatenScore = threatenScore + (10 - type.getWeight());
+                // }
+
+                // AttackScore = AttackScore + (currPiece.getType().getWeight()*threatenScore );
+
+                pieceFactor = pieceFactor - currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces);
+
             }
 
 
@@ -391,7 +421,7 @@ public class ChessBot {
         // System.out.println("PiecesScore is "+PiecesScore);
         
 
-        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight) + (HangingScore*HangingWeight) + (AttackScore*AttackWeight);
+        return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight) + (HangingScore*HangingWeight) + (AttackScore*AttackWeight) + (ControlWeight*ControlScore) + (pieceFactor*pieceFactorWeight);
     }
 
     private ArrayList<PieceType> PiecesAttacking(ChessBoard curBoard, ChessCoor pieceCoor){

@@ -295,6 +295,33 @@ public class Bishop extends ChessPiece{
         return newCoor.isContainedIn(GetPotentialMoves(CurrentBoard, CurrentCoord));
     }
 
+    @Override
+    public int getMapColorScore(ChessCoor coor, int endGameFactor) {
+        //X and Y are Flipped, so to access value, it should be ValueTable[Y][X]
+        int X = coor.getX();
+        int Y = coor.getY();
+
+        if(color == PieceColor.BLACK){
+            Y = 7 - coor.getY();
+        }
+
+        int[][] ValueTable =  
+        {
+            {20,-10,-10,-10,-10,-10,-10,-20},
+            {-10,  0,  0,  0,  0,  0,  0,-10},
+            {-10,  0,  5, 10, 10,  5,  0,-10},
+            {-10,  5,  5, 10, 10,  5,  5,-10},
+            {-10,  0, 10, 10, 10, 10,  0,-10},
+            {-10, 10, 10, 10, 10, 10, 10,-10},
+            {10,  5,  0,  0,  0,  0,  5,-10},
+            {-20,-10,-10,-10,-10,-10,-10,-20}
+
+        };
+        
+        //This is less important as the game progresses
+        return (ValueTable[Y][X]*endGameFactor) / 64;
+    }
+
    
     
 }

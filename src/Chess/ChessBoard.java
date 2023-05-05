@@ -36,6 +36,19 @@ public class ChessBoard {
     //InitNewCoor[0] is Initial Coordinate, InitCoor[1] is new Coordinate
     ChessCoor[] InitNewCoor = new ChessCoor[2];
     boolean PreviousIsCapture = false;
+    int numberOfPieces;
+
+    private int getNumberOfPieces(){
+        int num = 0;
+        for(int X = 0; X < 8; X++){
+            for(int Y = 0; Y < 8; Y++){
+                if(board[X][Y] != null){
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
     
     ChessBoard(){
         SetToDefaultPosition();
@@ -58,6 +71,7 @@ public class ChessBoard {
 
 
         this.TurnColor = copyChessBoard.TurnColor;
+        this.numberOfPieces = copyChessBoard.numberOfPieces;
         
     }
 
@@ -111,13 +125,17 @@ public class ChessBoard {
         board[4][7] = new King(PieceColor.WHITE);
 
         
-        
+        numberOfPieces = getNumberOfPieces();
     }
 
     private boolean putAtSquare(ChessPiece piece , ChessCoor newCoor){
         int newX = newCoor.getX();
         int newY = newCoor.getY();
         PreviousIsCapture = board[newX][newY] != null;
+
+        if(PreviousIsCapture){
+            numberOfPieces--;
+        }
 
         board[newX][newY] = piece;
 
@@ -133,6 +151,10 @@ public class ChessBoard {
         int oldY = OldCoor.getY();
 
         PreviousIsCapture = board[newX][newY] != null;
+
+        if(PreviousIsCapture){
+            numberOfPieces--;
+        }
 
         board[newX][newY] = board[oldX][oldY];
         board[oldX][oldY] = null;
@@ -582,6 +604,13 @@ public class ChessBoard {
 
     public void addPromotionEvent(PromotionEvent thisPromotion){
         this.myPromotionEvent = thisPromotion;
+    }
+
+    private ChessCoor toCoor(int number){
+        int Y = number % 8;
+        int X = (number - Y) / 8;
+
+        return new ChessCoor(X, Y);
     }
 
 }

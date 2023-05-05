@@ -285,5 +285,30 @@ public class Rook extends ChessPiece{
 
         return PotentialCoords;
     }
-  
+    @Override
+    public int getMapColorScore(ChessCoor coor, int endGameFactor) {
+        //X and Y are Flipped, so to access value, it should be ValueTable[Y][X]
+        int X = coor.getX();
+        int Y = coor.getY();
+
+        if(color == PieceColor.BLACK){
+            Y = 7 - coor.getY();
+        }
+
+        int[][] ValueTable =  
+        {
+            {0,  0,  0,  0,  0,  0,  0,  0},
+            {5, 10, 10, 10, 10, 10, 10,  5,},
+            {-5,  0,  0,  0,  0,  0,  0, -5},
+            {-5,  0,  0,  0,  0,  0,  0, -5},
+            {-5,  0,  0,  0,  0,  0,  0, -5},
+            {-5,  0,  0,  0,  0,  0,  0, -5},
+            {-5,  0,  0,  0,  0,  0,  0, -5},
+            {0,  0,  0,  5,  5,  0,  0,  0}
+
+        };
+        
+        //This is less important as the game progresses
+        return (ValueTable[Y][X]*endGameFactor) / 64;
+    }
 }
