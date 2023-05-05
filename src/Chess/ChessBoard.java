@@ -114,11 +114,36 @@ public class ChessBoard {
         
     }
 
-    
+    private boolean putAtSquare(ChessPiece piece , ChessCoor newCoor){
+        int newX = newCoor.getX();
+        int newY = newCoor.getY();
+        PreviousIsCapture = board[newX][newY] != null;
+
+        board[newX][newY] = piece;
+
+        return true;
+    }
+
+
+    private boolean putAtSquare(ChessCoor OldCoor , ChessCoor newCoor){
+        int newX = newCoor.getX();
+        int newY = newCoor.getY();
+
+        int oldX = OldCoor.getX();
+        int oldY = OldCoor.getY();
+
+        PreviousIsCapture = board[newX][newY] != null;
+
+        board[newX][newY] = board[oldX][oldY];
+        board[oldX][oldY] = null;
+
+        return true;
+    }
 
     
     public boolean Move(ChessCoor AinitialCoor, ChessCoor ANewCoor){
         //Defenitly a brain dead method, but this uses dependency injection so that there can be a (HasMoved) attribute
+        PreviousIsCapture = false;
         moveInterface BoardMove = (initialCoor, NewCoor) -> {
             //Check if there is no piece at the specified coordinate
             ChessPiece currentPiece = board[initialCoor.getX()][initialCoor.getY()] ;
@@ -194,8 +219,10 @@ public class ChessBoard {
             }
             
             //Actual Moving
-            board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
-            board[initialCoor.getX()][initialCoor.getY()] = null;
+            // board[NewCoor.getX()][NewCoor.getY()] = board[initialCoor.getX()][initialCoor.getY()];
+            // board[initialCoor.getX()][initialCoor.getY()] = null;
+
+            putAtSquare(AinitialCoor, ANewCoor);
 
             
             
@@ -277,8 +304,15 @@ public class ChessBoard {
             return futureBoard;
         }
 
-        futureBoard.board[NewCoor.getX()][NewCoor.getY()] = futureBoard.board[initialCoor.getX()][initialCoor.getY()];
-        futureBoard.board[initialCoor.getX()][initialCoor.getY()] = null;
+        ChessCoor PawnPromotion = futureBoard.pawMustBePromoted();
+        if(PawnPromotion != null){
+            ChessPiece promotedPiece = futureBoard.myPromotionEvent.doPromotionEvent(futureBoard.TurnColor);
+
+            //Actual promoting
+            futureBoard.board[PawnPromotion.getX()][PawnPromotion.getY()] = promotedPiece;
+        }
+
+        futureBoard.putAtSquare(initialCoor, NewCoor);
 
         futureBoard.NextTurn();
 
