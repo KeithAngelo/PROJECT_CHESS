@@ -115,7 +115,7 @@ public class ChessBot {
 
         if(depth <= 0){
             if(currGame.currentBoard.PreviousIsCapture && (System.nanoTime() - TimeStart)/1000000 < 70000){
-                return SearchAllCaptures(currGame, isMaximizing, alpha, beta, System.nanoTime());
+                return SearchAllCaptures(currGame, isMaximizing, alpha, beta, TimeStart);
             }
             return heavyEvaluation(currGame);
         }
@@ -203,7 +203,7 @@ public class ChessBot {
             return heavyEvaluation(currGame);
         }
 
-        if((System.nanoTime() - timeStart)/1000000 > 100){
+        if((System.nanoTime() - timeStart)/1000000 > 7000){
             SearchCalls++;
             System.out.println("SEARCH STOPPED");
             return heavyEvaluation(currGame);
