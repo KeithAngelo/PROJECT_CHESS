@@ -37,7 +37,7 @@ public class ChessBot {
         long start = System.nanoTime();
 
         int RecursionDepth = 3;
-        ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth);
+        ChessCoor[] output = RecursiveGeneration(currGame, RecursionDepth, System.nanoTime());
 
         long duration = (System.nanoTime() - start)/1000000;
 
@@ -52,7 +52,7 @@ public class ChessBot {
         // return GenerateRandom(currGame);
     }
 
-    private ChessCoor[] RecursiveGeneration(Game currGame, int depth){
+    private ChessCoor[] RecursiveGeneration(Game currGame, int depth, long TimeStart){
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
 
@@ -72,7 +72,7 @@ public class ChessBot {
             newGame.Move(CoorPair[0],CoorPair[1]);
 
 
-            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, System.nanoTime());
+            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
 
             ScoreMap.put(CoorPair, newEval);
 
@@ -323,7 +323,7 @@ public class ChessBot {
         int ControlWeight = 1;
 
         int pieceFactor = 0;
-        int pieceFactorWeight = 1;
+        int pieceFactorWeight = 50;
 
         for(int square = 0; square < 64 ; square++){
             ChessCoor currCoor = toCoor(square);

@@ -172,7 +172,7 @@ public class JChessUI extends JPanel{
 
 
                                     if(myMoveEvent != null){
-                                        myMoveEvent.doMoveEvent(CurrentTurn);
+                                        myMoveEvent.doMoveEvent(myBot.BOTColor);
                                     }
                                 }
                             }

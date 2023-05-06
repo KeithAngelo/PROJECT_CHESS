@@ -28,7 +28,7 @@ class myFrame extends JFrame{
         this.setLayout(new BorderLayout());
 
         // Create Chess Board
-        JChessUI MyChessGame = new JChessUI(500,Chess.Util.PieceColor.WHITE);
+        JChessUI MyChessGame = new JChessUI(500,Chess.Util.PieceColor.BLACK);
         MyChessGame.playAgainstBot(true);
         MyChessGame.addCheckEvent(e -> {
 
