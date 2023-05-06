@@ -172,6 +172,9 @@ public class JChessUI extends JPanel{
                         }
                         SelectedSquare = null;
 
+                    }else{
+                        LoadElements();
+                        return;
                     }
 
                     if(!GameIsFinished && makeAmove){
