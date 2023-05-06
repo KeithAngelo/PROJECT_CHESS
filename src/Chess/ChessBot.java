@@ -66,21 +66,40 @@ public class ChessBot {
         boolean isMax = false;
         HashMap<ChessCoor[], Integer> ScoreMap = new HashMap<>();
 
+        class threadManager{
+            int threadsStarted = 0;
+            int threadsFinished = 0;
+
+            public void startThread(){
+                threadsStarted++;
+            }
+
+            public void endThread(){
+                threadsFinished++;
+            }
+        }
+
+        threadManager thisThread = new threadManager();
+
         for(ChessCoor[] CoorPair : ListPossibleMoves){
 
             Game newGame = new Game(currGame);
             newGame.Move(CoorPair[0],CoorPair[1]);
 
 
-            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
+            BG_Run thread = new BG_Run(() -> {
+                int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
+                ScoreMap.put(CoorPair, newEval);
+                thisThread.endThread();
+            });
 
-            ScoreMap.put(CoorPair, newEval);
-
-            // if(newEval >= HighestScore){
-            //     HighestScore = newEval;
-            //     MaxCoors = CoorPair;
-            // }
+            thread.start();
+            thisThread.startThread();
+            
         }
+
+        //Will not continue until everything is finished
+        while(!(thisThread.threadsFinished >= thisThread.threadsStarted)){System.out.print("");}
 
         //Randomize order of getting highest number
         while(!ListPossibleMoves.isEmpty()){
@@ -589,4 +608,22 @@ public class ChessBot {
     }
 
 
+}
+
+class BG_Run extends Thread{
+    @FunctionalInterface
+    interface runInterface{
+        public void dothing();
+    }
+
+    final runInterface myRun;
+    BG_Run(runInterface run){
+        myRun = run;
+        // run();
+    }
+
+    @Override
+    public void run(){
+        myRun.dothing();
+    }
 }
