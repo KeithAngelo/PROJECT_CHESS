@@ -72,6 +72,7 @@ public class JChessUI extends JPanel{
     
     private ChessSquare[][] ChessGrid = new ChessSquare[GridDimension][GridDimension]; 
 
+    boolean StillLoading = false;
     class ChessSquare extends JButton{  
         final int XCoor;
         final int YCoor;
@@ -125,21 +126,30 @@ public class JChessUI extends JPanel{
 
             //Actions when this button is pressed
             this.addActionListener(e -> {
-                if(!GameIsFinished){
+                boolean makeAmove = false;
+                if(GameIsFinished){
+                    LoadElements();
+                    return;
+                }
+
+                if(StillLoading){
+                    LoadElements();
+                    return;
+                }
                     
                 if(!AgainstBot || ChessGame.getCurrentTurn() == PlayerColor){
 
-                    boolean makeAmove = false;
+                        
 
                     if(currentPiece == null){
                         makeAmove = SelectedSquare != null;
                     }else{
-                        //Cases for when square should be selected 
+                         //Cases for when square should be selected 
                         if(currentPiece != null && currentPiece.getColor()==CurrentTurn){
                             SelectedSquare = new ChessCoor(XCoor, YCoor);
                         }
 
-                    
+                            
                         // Cases for when move should be executed
 
                         if(SelectedSquare != null && !(currentPiece.getColor().equals(CurrentTurn)) ){
@@ -148,47 +158,84 @@ public class JChessUI extends JPanel{
                         }
                     }
 
-
-                    if(makeAmove){
-                        int oldX = SelectedSquare.getX();
-                        int oldY = SelectedSquare.getY();
-                        if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
-                            if(myMoveEvent != null){
-                                myMoveEvent.doMoveEvent(CurrentTurn);
-                            }
-
-                            SelectedSquare = null;
-                            LoadElements();
-
-                            //Bot Do a move
-                            if(AgainstBot && !GameIsFinished){
-                                ChessCoor[] botMove = new ChessCoor[2];
-                                botMove = myBot.GenerateMove(ChessGame);
-
-                                if(ChessGame.Move(botMove[0], botMove[1])){
-
-                                    // int staticEvaluation = myBot.EvaluatePosition(ChessGame);
-                                    // System.out.println("Static Evaluation : "+staticEvaluation);
-
-
-                                    if(myMoveEvent != null){
-                                        myMoveEvent.doMoveEvent(myBot.BOTColor);
-                                    }
-                                }
-                            }
-
-                        }
-                        
+                    if(!makeAmove){
+                        LoadElements();
+                        return;
                     }
+
+
+                    int oldX = SelectedSquare.getX();
+                    int oldY = SelectedSquare.getY();
+                    if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
+                        if(myMoveEvent != null){
+                            myMoveEvent.doMoveEvent(CurrentTurn);
+                        }
+                        SelectedSquare = null;
+
+                    }
+
+                    if(!GameIsFinished && makeAmove){
+                        StillLoading = true;
+
+                        class BG_Run extends Thread{
+                            @FunctionalInterface
+                            interface runInterface{
+                                public void dothing();
+                            }
+            
+                            final runInterface myRun;
+                            BG_Run(runInterface run){
+                                myRun = run;
+                                // run();
+                            }
+            
+                            @Override
+                            public void run(){
+                                myRun.dothing();
+                            }
+                        }
+
+                        BG_Run multithread = new BG_Run( () -> {
+                            botAction(); 
+                        });
+                        multithread.start();
+                            
+                    }
+                            
+
                 }
-                }
-                //Brain damage
                 
-                LoadElements();
+            //Brain damage
+                
+            LoadElements();
+                
             }
-            );
+            ); 
 
             
+ 
+        }
+
+        
+
+        private void botAction(){
+            if(AgainstBot && !GameIsFinished){
+                ChessCoor[] botMove = new ChessCoor[2];
+                botMove = myBot.GenerateMove(ChessGame);
+
+                if(ChessGame.Move(botMove[0], botMove[1])){
+
+                    // int staticEvaluation = myBot.EvaluatePosition(ChessGame);
+                    // System.out.println("Static Evaluation : "+staticEvaluation);
+
+
+                    if(myMoveEvent != null){
+                        myMoveEvent.doMoveEvent(myBot.BOTColor);
+                    }
+                }
+            }
+            StillLoading = false;
+            LoadElements();
         }
         
     }
