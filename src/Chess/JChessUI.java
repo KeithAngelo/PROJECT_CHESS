@@ -41,12 +41,15 @@ public class JChessUI extends JPanel{
     Color DarkSquares = new Color(0x8fbd84);
     Color SelectedBorderColor = new Color(0x008800);
     Color AllowedMoveBorderColor = new Color(0xfcba03);
+    Color CheckIndicator = new Color(0xAA2222);
 
     private Border SelectedBorder = BorderFactory.createLineBorder(SelectedBorderColor,3);
     private Border AllowedMoveBorder = BorderFactory.createLineBorder(AllowedMoveBorderColor,2);
+    private Border CheckedBorder = BorderFactory.createLineBorder(CheckIndicator,3);
 
     boolean GameIsFinished = false;
     boolean AllowMoves = true;
+    boolean InCheck = false;
 
     boolean AgainstBot = false;
     ChessBot myBot;
@@ -56,6 +59,7 @@ public class JChessUI extends JPanel{
     private WinEvent JCHessWinEvent;
     private MoveEvent myMoveEvent;
     private DrawEvent myDrawEvent;
+    private CheckEvent myCheckEvent;
     
 
     /* 
@@ -103,7 +107,11 @@ public class JChessUI extends JPanel{
                     this.setBorder(AllowedMoveBorder);
                 }
 
+
             }
+
+            
+
 
             //Generate Squares Checker pattern Coloring
             this.setBackground(WhiteSquares);
@@ -122,6 +130,10 @@ public class JChessUI extends JPanel{
             //set ChessIcon
             if(!(currentPiece == null)){
                 this.setIcon(currentPiece.getImg());
+
+                if(InCheck && currentPiece.getType() == PieceType.KING && currentPiece.getColor() == CurrentTurn){
+                    this.setBorder(CheckedBorder);
+                }
             }
 
 
@@ -154,6 +166,10 @@ public class JChessUI extends JPanel{
                             SelectedSquare = new ChessCoor(XCoor, YCoor);
                         }
 
+                        if(InCheck && currentPiece.getType() == PieceType.KING && currentPiece.getColor() == CurrentTurn){
+                            this.setBorder(CheckedBorder);
+                        }
+
                             
                         // Cases for when move should be executed
 
@@ -167,6 +183,8 @@ public class JChessUI extends JPanel{
                         LoadElements();
                         return;
                     }
+
+                    InCheck = false;
 
 
                     int oldX = SelectedSquare.getX();
@@ -231,8 +249,9 @@ public class JChessUI extends JPanel{
                 ChessCoor[] botMove = new ChessCoor[2];
                 botMove = myBot.GenerateMove(ChessGame);
 
-                if(ChessGame.Move(botMove[0], botMove[1])){
+                InCheck = false;
 
+                if(ChessGame.Move(botMove[0], botMove[1])){
                     // int staticEvaluation = myBot.EvaluatePosition(ChessGame);
                     // System.out.println("Static Evaluation : "+staticEvaluation);
 
@@ -241,7 +260,7 @@ public class JChessUI extends JPanel{
                         myMoveEvent.doMoveEvent(myBot.BOTColor);
                     }
                 }
-            }
+            }        
             StillLoading = false;
             LoadElements();
         }
@@ -285,6 +304,16 @@ public class JChessUI extends JPanel{
             }
 
         });
+
+        ChessGame.addCheckEvent(Color -> {
+            InCheck = true;
+
+            if(myCheckEvent != null){
+                myCheckEvent.doCheckEvent(Color);
+            }
+        });
+
+
 
         this.setPreferredSize(new java.awt.Dimension(Dimension,Dimension));
         this.setBounds(0, 0, Dimension, Dimension);
@@ -367,7 +396,7 @@ public class JChessUI extends JPanel{
     //Have not implemented a check event within JChessUI class because I haven't thought of a check event to implement
     //implement this if ever there is a necessary check event
     public void addCheckEvent(CheckEvent checkEvent){
-        ChessGame.addCheckEvent(checkEvent);
+       myCheckEvent = checkEvent;
     }
 
     public void addCaptureEvent(CaptureEvent thisCapture){

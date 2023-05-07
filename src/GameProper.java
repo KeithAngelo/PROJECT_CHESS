@@ -70,7 +70,7 @@ public class GameProper extends JFrame{
         CurrentTurn = PieceColor.getOther(CurrentTurn);
 
         if(isCheck){
-            ChessUI.setBorder(checkChessUIBorder);
+            // ChessUI.setBorder(checkChessUIBorder);
             isCheck = false;
         }
 
