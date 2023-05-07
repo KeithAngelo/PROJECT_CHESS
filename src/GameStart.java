@@ -3,6 +3,9 @@
 
 import javax.swing.JFrame;
 
+import Chess.Util.*;
+import Chess.*;
+
 public class GameStart{
     GameStart(){
         new PickNumberOfPlayers();
@@ -11,7 +14,7 @@ public class GameStart{
 
 class PickNumberOfPlayers extends JFrame{
     PickNumberOfPlayers(){
-
+        new InputNames(1); // this is a placeholder, add your own implementation
     }
 
     // Once the Player has chosen the number of players, instantiate the "InputNames" object
@@ -27,6 +30,8 @@ class InputNames extends JFrame{
 
         // Once the Player has chosen the name(s), instantiate the "PickAColor" object
 
+        new PickAColor("John Doe"); // this is a placeholder, add your own implementation
+
     }
 }
 
@@ -35,10 +40,14 @@ class PickAColor extends JFrame{
     //Do the appropriate actions for each scenario
 
     PickAColor(String playerName){
+        // TODO : Add implementation of picking a color for single player mode
+
+        new GameProper(playerName, PieceColor.WHITE); //this is a  placeholder, add your own implementation
 
     }
 
     PickAColor(String playerName_1, String playerName_2){
+        // TODO : Add implementation of picking colors for for two player mode
 
     }
 

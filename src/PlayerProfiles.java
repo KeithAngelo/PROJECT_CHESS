@@ -4,19 +4,21 @@
 import Chess.Util.*;
 import Chess.*;
 
+import CustomAssets.*;
+
 import javax.swing.JPanel;
 
 public class PlayerProfiles extends JPanel{
 
     final String PlayerName;
     final PieceColor colorOfPlayer;
-    int Score = 0;
+    public int Score = 0;
 
     PlayerProfiles(String PlayerName, PieceColor colorOfPlayer){
         this.PlayerName = PlayerName;
         this.colorOfPlayer = colorOfPlayer;
 
-
+        this.add(new CText(PlayerName)); // this is a Placeholder, add your own implementation
     }
 
     public void LoadElements(){

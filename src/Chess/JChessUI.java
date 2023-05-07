@@ -46,6 +46,7 @@ public class JChessUI extends JPanel{
     private Border AllowedMoveBorder = BorderFactory.createLineBorder(AllowedMoveBorderColor,2);
 
     boolean GameIsFinished = false;
+    boolean AllowMoves = true;
 
     boolean AgainstBot = false;
     ChessBot myBot;
@@ -129,6 +130,10 @@ public class JChessUI extends JPanel{
                 boolean makeAmove = false;
                 if(GameIsFinished){
                     LoadElements();
+                    return;
+                }
+
+                if(!AllowMoves){
                     return;
                 }
 
@@ -389,5 +394,9 @@ public class JChessUI extends JPanel{
             LoadElements();
         }
 
+    }
+
+    public void AllowMoves(boolean allow){
+        AllowMoves = allow;
     }
 }

@@ -9,7 +9,8 @@ public class App {
 
     // AYAW SA NI HILABTA, mao ni final class where the program will be run
     public static void main(String[] args) throws Exception {
-        new myFrame();
+        // new myFrame();
+        new GameStart();
     }
 }
 
