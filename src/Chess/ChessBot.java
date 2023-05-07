@@ -6,6 +6,7 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 
 import Chess.Piece.ChessPiece;
@@ -67,16 +68,7 @@ public class ChessBot {
         HashMap<ChessCoor[], Integer> ScoreMap = new HashMap<>();
 
         class threadManager{
-            int threadsStarted = 0;
-            int threadsFinished = 0;
-
-            public void startThread(){
-                threadsStarted++;
-            }
-
-            public void endThread(){
-                threadsFinished++;
-            }
+            Queue<Thread> threads = new LinkedList<>();
         }
 
         threadManager thisThread = new threadManager();
@@ -90,16 +82,16 @@ public class ChessBot {
             BG_Run thread = new BG_Run(() -> {
                 int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
                 ScoreMap.put(CoorPair, newEval);
-                thisThread.endThread();
+                thisThread.threads.poll();
             });
 
             thread.start();
-            thisThread.startThread();
+            thisThread.threads.add(thread);
             
         }
 
         //Will not continue until everything is finished
-        while(!(thisThread.threadsFinished >= thisThread.threadsStarted)){System.out.print("");}
+        while(!thisThread.threads.isEmpty()){System.out.print("");}
 
         //Randomize order of getting highest number
         while(!ListPossibleMoves.isEmpty()){
