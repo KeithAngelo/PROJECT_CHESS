@@ -365,6 +365,7 @@ public class ChessBot {
                 }
 
                 AttackScore = AttackScore - (currPiece.getType().getWeight()*threatenScore );
+                // System.out.println("Map score "+currPiece.getType()+" is " + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces));
 
                 pieceFactor = pieceFactor + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces);
                 
@@ -388,19 +389,21 @@ public class ChessBot {
                 }
                 CaptureScore = CaptureScore + (-1 * (8 + PreviousPiece.getType().getWeight() - currPiece.getType().getWeight()));
 
-                // int protectionScore = 0;
-                // for(PieceType type : PiecesDefending(thisBoard, currCoor)){
-                //     protectionScore = protectionScore + type.getWeight();
-                // }
+                int protectionScore = 0;
+                for(PieceType type : PiecesDefending(thisBoard, currCoor)){
+                    protectionScore = protectionScore + type.getWeight();
+                }
 
-                // HangingScore =  protectionScore + currPiece.getType().getWeight();
+                HangingScore =  protectionScore + currPiece.getType().getWeight();
                 
-                // int threatenScore = 0;
-                // for(PieceType type : PiecesAttacking(thisBoard, currCoor)){
-                //     threatenScore = threatenScore + (10 - type.getWeight());
-                // }
+                int threatenScore = 0;
+                for(PieceType type : PiecesAttacking(thisBoard, currCoor)){
+                    threatenScore = threatenScore + (10 - type.getWeight());
+                }
 
-                // AttackScore = AttackScore + (currPiece.getType().getWeight()*threatenScore );
+                AttackScore = AttackScore + (currPiece.getType().getWeight()*threatenScore );
+                
+                // System.out.println("Map score "+currPiece.getType()+" is " + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces));
 
                 pieceFactor = pieceFactor - currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces);
 
