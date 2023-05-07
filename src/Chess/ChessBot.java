@@ -6,6 +6,7 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 
 import Chess.Piece.ChessPiece;
@@ -66,21 +67,38 @@ public class ChessBot {
         boolean isMax = false;
         HashMap<ChessCoor[], Integer> ScoreMap = new HashMap<>();
 
+        
+        Queue<Thread> threads = new LinkedList<>();
+        int threadsStarted = 0;
+        int threadsKilled = 0;
         for(ChessCoor[] CoorPair : ListPossibleMoves){
 
             Game newGame = new Game(currGame);
             newGame.Move(CoorPair[0],CoorPair[1]);
 
 
-            int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
+            BG_Run thread = new BG_Run(() -> {
+                int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
+                ScoreMap.put(CoorPair, newEval);
+                // thisThread.threads.poll();
+            });
 
-            ScoreMap.put(CoorPair, newEval);
-
-            // if(newEval >= HighestScore){
-            //     HighestScore = newEval;
-            //     MaxCoors = CoorPair;
-            // }
+            thread.start();
+            threadsStarted++;
+            threads.add(thread);
+            
         }
+
+        //Will not continue until everything is finished
+        while(!threads.isEmpty()){
+            Thread currThread = threads.peek();
+            if(!currThread.isAlive()){
+                threadsKilled++;
+                threads.remove(currThread);
+            }
+        }
+
+        System.out.printf("Threads Started : %d | Threads Killed : %d\n",threadsStarted,threadsKilled);
 
         //Randomize order of getting highest number
         while(!ListPossibleMoves.isEmpty()){
@@ -592,4 +610,22 @@ public class ChessBot {
     }
 
 
+}
+
+class BG_Run extends Thread{
+    @FunctionalInterface
+    interface runInterface{
+        public void dothing();
+    }
+
+    final runInterface myRun;
+    BG_Run(runInterface run){
+        myRun = run;
+        // run();
+    }
+
+    @Override
+    public void run(){
+        myRun.dothing();
+    }
 }
