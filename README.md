@@ -1,4 +1,14 @@
-# Chess Project Documentation
+<style>
+    .heading1 {
+    color: White;
+    font-weight:700;
+    font-size: 35px;
+    }
+
+</style>
+<h1 id="identifier" class="heading1">Chess Project Documentation</h1>
+
+
 this project utilizes the *Java Swing* framework 
 to build a Graphical user interface
 
@@ -9,7 +19,7 @@ To use the chess package, use the following imports
 
     import Chess.Util*;
 
-## Generating a ChessBoard
+# Generating a ChessBoard
 You can add a chess Game using the *JChessUI* object :
 
 ## The JChessUI object
@@ -35,7 +45,7 @@ once instantiated, it can be added into a JFrame or another JPanel
 
     myFrame.add(myChessGame);
 
-## **JChessUI methods**
+# **JChessUI methods**
 The JChessUI object has several public methods that are designed to be called for different purposes.
 
 ## **`Revert() `Method**
@@ -117,3 +127,88 @@ by implementing this, whenever a Chess piece has been captured, the terminal wil
 
 **`A BISHOP has been captured`** or **`A PAWN has been captured`** depending what piece has been captured
 
+# Utility
+
+## **`PieceColor`** enums
+
+A PieceColor is an <a href = "https://www.youtube.com/watch?v=TCMhP8trGwY&ab_channel=BroCode">enum</a> that contains the different colors a Chess Piece can be. It is used in a variety of functions in the project, and is useful as a method of identifying things like which pieces are allowed to be moved, and whose turn it is.
+
+Here are the set constants :
+
+    PieceColor.WHITE
+    PieceColor.BLACK
+
+These constants can be used as arguements in functions, Here is an example :
+
+    public boolean isWhite (PieceColor color) {
+        if (color == PieceColor.WHITE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+This sample code will return `true` if the arguement PieceColor is white, and `false` if otherwise.
+
+## **`PieceType`** enums
+
+A PieceColor is an <a href = "https://www.youtube.com/watch?v=TCMhP8trGwY&ab_channel=BroCode">enum</a> that contains the different types a Chess Piece can be. This is useful as a way of identifying the type of a piece.
+
+Here are the set constants :
+
+    PieceType.PAWN
+    PieceType.BISHOP
+    PieceType.KNIGHT
+    PieceType.ROOK
+    PieceType.QUEEN
+    PieceType.KING
+
+These constants can be used as arguements in functions, Here is an example :
+
+    public void talkToKing (PieceType type) {
+        if (type == PieceType.QUEEN) {
+            System.out.println("Hello King !");
+        }
+
+        else {
+            System.out.println("You are not a king, but hello!");
+        }
+    }
+
+If the given arguement is `PieceType.KING` , then the function will print this to the terminal
+
+    Hello King !
+
+Otherwise, it will print
+
+     You are not a king, but hello!
+
+## `PieceType` methods
+
+Each PieceType contains an Integer that represents the value of the piece. The greater the value of the piece, the larger this integer is.
+
+Here are the weighted values :
+
+    PAWN(1), 
+    KING(0), 
+    QUEEN(8), 
+    BISHOP(3), 
+    ROOK(5), 
+    KNIGHT(3);
+
+this weighted value can be accessed with the **`getWeight()`** method.
+
+Here is an example method : 
+
+    public void printValue(PieceType type){
+        System.out.println("The value of the piece is " + type.getWeight())
+    }
+
+When this code is run :
+
+    PieceType bishop = PieceType.BISHOP;
+    printValue(bishop);
+
+This will be printed in the terminal
+
+    The value of the piece is 3
