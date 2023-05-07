@@ -67,12 +67,10 @@ public class ChessBot {
         boolean isMax = false;
         HashMap<ChessCoor[], Integer> ScoreMap = new HashMap<>();
 
-        class threadManager{
-            Queue<Thread> threads = new LinkedList<>();
-        }
-
-        threadManager thisThread = new threadManager();
-
+        
+        Queue<Thread> threads = new LinkedList<>();
+        int threadsStarted = 0;
+        int threadsKilled = 0;
         for(ChessCoor[] CoorPair : ListPossibleMoves){
 
             Game newGame = new Game(currGame);
@@ -82,16 +80,25 @@ public class ChessBot {
             BG_Run thread = new BG_Run(() -> {
                 int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
                 ScoreMap.put(CoorPair, newEval);
-                thisThread.threads.poll();
+                // thisThread.threads.poll();
             });
 
             thread.start();
-            thisThread.threads.add(thread);
+            threadsStarted++;
+            threads.add(thread);
             
         }
 
         //Will not continue until everything is finished
-        while(!thisThread.threads.isEmpty()){System.out.print("");}
+        while(!threads.isEmpty()){
+            Thread currThread = threads.peek();
+            if(!currThread.isAlive()){
+                threadsKilled++;
+                threads.remove(currThread);
+            }
+        }
+
+        System.out.printf("Threads Started : %d | Threads Killed : %d\n",threadsStarted,threadsKilled);
 
         //Randomize order of getting highest number
         while(!ListPossibleMoves.isEmpty()){
