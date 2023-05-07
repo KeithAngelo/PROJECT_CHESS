@@ -1,11 +1,3 @@
-<style>
-    .heading1 {
-    color: White;
-    font-weight:700;
-    font-size: 35px;
-    }
-
-</style>
 <h1 id="identifier" class="heading1">Chess Project Documentation</h1>
 
 

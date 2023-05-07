@@ -1,12 +1,3 @@
-<style>
-    .heading1 {
-    color: White;
-    font-weight:700;
-    font-size: 35px;
-    }
-
-</style>
-
 <h1 id="identifier" class="heading1">Development Guide</h1>
 
 <img src="Media\BISHOP_BLACK.png" alt="">
