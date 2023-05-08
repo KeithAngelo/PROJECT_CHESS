@@ -136,10 +136,16 @@ public class GameProper extends JFrame{
         ChessUI.addWinEvent(color -> new GameFinish(PieceColor.getOther(color), EndStatus.CHECKMATE));
         ChessUI.addDrawEvent( ()-> new GameFinish(PieceColor.getOther(CurrentTurn), EndStatus.DRAW));
         ChessUI.addCheckEvent(color -> isCheck = true);
+        ChessUI.addCaptureEvent(type -> updateScores(type));
         ChessUI.setBorder(defaultChessUIBorder);
 
 
         this.setVisible(true);
+    }
+
+    private void updateScores(PieceType type){
+        int currScore = getPlayer(CurrentTurn).profiles.Score;
+        getPlayer(CurrentTurn).profiles.updateScore(currScore + type.getWeight());
     }
 
 

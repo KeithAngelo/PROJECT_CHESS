@@ -39,6 +39,8 @@ class PickAColor extends JFrame{
     //There are two constructors (Method Overloading), one for singleplayer, one for two players
     //Do the appropriate actions for each scenario
 
+    // here is a tutorial for overloaded methods : https://youtu.be/kArGE1-vRrw
+
     PickAColor(String playerName){
         // TODO : Add implementation of picking a color for single player mode
 
@@ -48,6 +50,8 @@ class PickAColor extends JFrame{
 
     PickAColor(String playerName_1, String playerName_2){
         // TODO : Add implementation of picking colors for for two player mode
+
+        new GameProper(playerName_1, playerName_2, PieceColor.WHITE); //this is a  placeholder, add your own implementation
 
     }
 
