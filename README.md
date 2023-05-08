@@ -98,6 +98,38 @@ This will be printed in the terminal
 
     The value of the piece is 3
 
+## `EndStatus` enums
+
+A EndStatus is an enum that can be used as a constant variable to communicate the different ways a game can end
+
+Here are the constant values :
+
+    EndStatus.CHECKMATE
+    EndStatus.DRAW
+    EndStatus.WIN_BY_TIME
+
+These constants can be used as arguements in methods to communicate the status of a game. Here is a sample implementation;
+
+    public void printEndStatus(EndStatus status){
+        if(status == EndStatus.CHECKMATE){
+            System.out.println("The game ended in a check mate);
+        }
+
+        else if(status == EndStatus.DRAW){
+            System.out.println("The game ended in a draw);
+        }
+
+        else if(status == EndStatus.WIN_BY_TIME){
+            System.out.println("The game ended in a time out);
+        }
+
+    }
+
+    printEndStatus(EndStatus.DRAW;)
+
+When this code is run, this will be printed to the terminal :
+
+    The game ended in a draw
 
 # Generating a ChessBoard
 You can add a chess Game using the *JChessUI* object :

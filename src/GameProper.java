@@ -43,7 +43,7 @@ public class GameProper extends JFrame{
         Player(String Name, PieceColor color){
             this.Name = Name;
             this.Color = color;
-            Timer = new ChessTimer(StartTimeMilis, () -> new GameFinish(PieceColor.getOther(Color)));
+            Timer = new ChessTimer(StartTimeMilis, () -> new GameFinish(PieceColor.getOther(Color), EndStatus.WIN_BY_TIME));
             profiles = new PlayerProfiles(Name, Color);
         }
     }
@@ -133,7 +133,8 @@ public class GameProper extends JFrame{
             this.add(new SidePanel(), BorderLayout.EAST);
 
         ChessUI.addMoveEvent( color -> nextTurn() );
-        ChessUI.addWinEvent(color -> new GameFinish(PieceColor.getOther(color)));
+        ChessUI.addWinEvent(color -> new GameFinish(PieceColor.getOther(color), EndStatus.CHECKMATE));
+        ChessUI.addDrawEvent( ()-> new GameFinish(PieceColor.getOther(CurrentTurn), EndStatus.DRAW));
         ChessUI.addCheckEvent(color -> isCheck = true);
         ChessUI.setBorder(defaultChessUIBorder);
 
