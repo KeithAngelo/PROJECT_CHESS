@@ -1,11 +1,8 @@
 package Chess;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
@@ -493,7 +490,6 @@ public class ChessBot {
         for(int initX = 0; initX < 8; initX++){
             for(int initY = 0; initY < 8; initY++){
                 ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
-                ChessCoor currCoor = new ChessCoor(initX, initY);
                 if( currPiece== null){
                     continue;
                 }
@@ -559,49 +555,7 @@ public class ChessBot {
     }
 
 
-
-    private ChessCoor[] GenerateRandom(Game currGame){
-        ChessCoor[] generatedMove = new ChessCoor[2];
-
-        ArrayList<ChessCoor[]> possiblePairMoves = new ArrayList<>();
-
-
-        ChessBoard currBoard = currGame.currentBoard;
-        for(int initX = 0; initX < 8; initX++){
-            for(int initY = 0; initY < 8; initY++){
-                ChessPiece currPiece = currBoard.peekPieceAt(initX, initY);
-                if( currPiece== null){
-                    continue;
-                }
-
-                if(currPiece.getColor() != BOTColor){
-                    continue;
-                }
-
-                LinkedList<ChessCoor> possiblePieceMoves = PiecePossibleMoves(currBoard, new ChessCoor(initX, initY));
-
-                if(possiblePieceMoves.isEmpty()){
-                    continue;
-                }
-
-                for(ChessCoor newCoor : possiblePieceMoves){
-                    ChessCoor[] pairOfCoors = new ChessCoor[2];
-                    pairOfCoors[0] = new ChessCoor(initX , initY);
-                    pairOfCoors[1] = newCoor;
-                    possiblePairMoves.add(pairOfCoors);
-                }
-            }
-        }
-
-
-        //pick random coor in PossiblePairMoves
-
-        Random rand = new Random();
-        generatedMove = possiblePairMoves.get(rand.nextInt(0,possiblePairMoves.size()-1));
-
-        return generatedMove;
-    }
-
+    
     private ChessCoor toCoor(int number){
         int Y = number % 8;
         int X = (number - Y) / 8;

@@ -18,7 +18,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -203,23 +202,7 @@ public class JChessUI extends JPanel{
                     if(!GameIsFinished && makeAmove){
                         StillLoading = true;
 
-                        class BG_Run extends Thread{
-                            @FunctionalInterface
-                            interface runInterface{
-                                public void dothing();
-                            }
-            
-                            final runInterface myRun;
-                            BG_Run(runInterface run){
-                                myRun = run;
-                                // run();
-                            }
-            
-                            @Override
-                            public void run(){
-                                myRun.dothing();
-                            }
-                        }
+                        
 
                         BG_Run multithread = new BG_Run( () -> {
                             botAction(); 
@@ -427,5 +410,23 @@ public class JChessUI extends JPanel{
 
     public void AllowMoves(boolean allow){
         AllowMoves = allow;
+    }
+}
+
+class BG_Run extends Thread{
+    @FunctionalInterface
+    interface runInterface{
+        public void dothing();
+    }
+
+    final runInterface myRun;
+    BG_Run(runInterface run){
+        myRun = run;
+        // run();
+    }
+
+    @Override
+    public void run(){
+        myRun.dothing();
     }
 }

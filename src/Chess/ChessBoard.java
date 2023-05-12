@@ -3,8 +3,6 @@ package Chess;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import Chess.Piece.*;
 import Chess.Util.*;
@@ -126,20 +124,6 @@ public class ChessBoard {
 
         
         numberOfPieces = getNumberOfPieces();
-    }
-
-    private boolean putAtSquare(ChessPiece piece , ChessCoor newCoor){
-        int newX = newCoor.getX();
-        int newY = newCoor.getY();
-        PreviousIsCapture = board[newX][newY] != null;
-
-        if(PreviousIsCapture){
-            numberOfPieces--;
-        }
-
-        board[newX][newY] = piece;
-
-        return true;
     }
 
 
@@ -606,12 +590,6 @@ public class ChessBoard {
         this.myPromotionEvent = thisPromotion;
     }
 
-    private ChessCoor toCoor(int number){
-        int Y = number % 8;
-        int X = (number - Y) / 8;
-
-        return new ChessCoor(X, Y);
-    }
 
 }
 

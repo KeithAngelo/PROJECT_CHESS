@@ -47,6 +47,8 @@ public class ChessTimer extends JPanel{
 
     }
 
+    
+
     //When the timer hits zero, call this method
     private void TimeRunOut(){
         isRunning = false;

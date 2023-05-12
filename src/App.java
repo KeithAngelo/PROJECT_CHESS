@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import Chess.JChessUI;
-import Chess.Util.PieceColor;
 public class App {
 
     // AYAW SA NI HILABTA, mao ni final class where the program will be run

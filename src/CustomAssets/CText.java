@@ -1,6 +1,5 @@
 package CustomAssets;
 
-import java.awt.Font;
 
 import javax.swing.JLabel;
 
