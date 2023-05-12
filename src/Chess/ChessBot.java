@@ -23,6 +23,7 @@ public class ChessBot {
     int MovesPruned = 0;
     int FinalEvaluation = 0;
     int SearchCalls = 0;
+
     //This will return an array of 2 ChessCoor.
     //Index Zero is initial Coor, index One is new Coor
     public ChessCoor[] GenerateMove(Game currGame){
@@ -45,9 +46,9 @@ public class ChessBot {
         System.out.println("Final Evaluation : "+FinalEvaluation);
         System.out.println("Capture Evaluations : "+SearchCalls);
         System.out.println("Moves Pruned : "+MovesPruned+"\n\n\n");
+
         return output;
 
-        // return GenerateRandom(currGame);
     }
 
     private ChessCoor[] RecursiveGeneration(Game currGame, int depth, long TimeStart){
@@ -77,7 +78,6 @@ public class ChessBot {
             BG_Run thread = new BG_Run(() -> {
                 int newEval = RecursiveEvaluation(newGame, depth-1, isMax, Integer.MIN_VALUE, Integer.MAX_VALUE, TimeStart);
                 ScoreMap.put(CoorPair, newEval);
-                // thisThread.threads.poll();
             });
 
             thread.start();
@@ -118,12 +118,8 @@ public class ChessBot {
         return MaxCoors;
     }
  
-    // This will return the score of the worst case 
+
     private int RecursiveEvaluation(Game currGame, int depth, boolean isMaximizing, int alpha, int beta , long TimeStart){
-
-        //TODO : Implement Alpha beta pruning
-
-        // TODO : Refactor by renaming highest to lowest naming
 
         ChessBoard currBoard = currGame.currentBoard;
         PieceColor currentColor = currBoard.TurnColor;
@@ -380,7 +376,7 @@ public class ChessBot {
                 }
 
                 AttackScore = AttackScore - (currPiece.getType().getWeight()*threatenScore );
-                // System.out.println("Map score "+currPiece.getType()+" is " + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces));
+            
 
                 pieceFactor = pieceFactor + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces);
                 
@@ -418,7 +414,6 @@ public class ChessBot {
 
                 AttackScore = AttackScore + (currPiece.getType().getWeight()*threatenScore );
                 
-                // System.out.println("Map score "+currPiece.getType()+" is " + currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces));
 
                 pieceFactor = pieceFactor - currPiece.getMapColorScore(currCoor, thisBoard.numberOfPieces);
 
@@ -427,16 +422,9 @@ public class ChessBot {
 
 
         }
-        // System.out.println("-----------------------");
-
-
-        //TODO : Generate small punishment for hanging pieces
-        //Add a multiplier for the hanging piece weight
-
         
 
         PiecesScore = BoardPiecesBonus-OpponentBoardScore;
-        // System.out.println("PiecesScore is "+PiecesScore);
         
 
         return (PiecesScore*PiecesScoreWeight) + (CaptureScore*CaptureWeight) + (HangingScore*HangingWeight) + (AttackScore*AttackWeight) + (ControlWeight*ControlScore) + (pieceFactor*pieceFactorWeight);
@@ -510,24 +498,6 @@ public class ChessBot {
                     pairOfCoors[1] = newCoor;
                     possiblePairMoves.push(pairOfCoors);
                 }
-
-                //In theory this should be faster, but its way slower, and i dont know why
-
-                // ChessPiece.iterateAllPossibleMoves(currCoor, (X, Y)-> {
-                //     ChessCoor NewCoor = new ChessCoor(X, Y);
-                //     ChessBoard testBoard = new ChessBoard(currBoard);  
-                //     if(testBoard.Move(currCoor, NewCoor)){
-                //         ChessCoor[] pairOfCoors = new ChessCoor[2];
-                //         pairOfCoors[0] = currCoor;
-                //         pairOfCoors[1] = NewCoor;
-
-                //         if(testBoard.PreviousIsCapture || testBoard.isCheckMated()){
-                //             possiblePairMoves.push(pairOfCoors);
-                //         }else{
-                //             possiblePairMoves.add(pairOfCoors);
-                //         }
-                //     }
-                // });
 
             }
         }

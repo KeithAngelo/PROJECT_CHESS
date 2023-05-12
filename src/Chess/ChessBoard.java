@@ -10,7 +10,6 @@ import Chess.Util.*;
 
 
 public class ChessBoard {
-    //TODO : implement this as where all pieces in a game is stored.
 
     public PieceColor TurnColor = PieceColor.WHITE;
 
@@ -30,7 +29,6 @@ public class ChessBoard {
     PromotionEvent myPromotionEvent = CurrentTurn -> new Queen(TurnColor);
 
 
-    //TODO : Implement a way to store what was the previous move
     //InitNewCoor[0] is Initial Coordinate, InitCoor[1] is new Coordinate
     ChessCoor[] InitNewCoor = new ChessCoor[2];
     boolean PreviousIsCapture = false;

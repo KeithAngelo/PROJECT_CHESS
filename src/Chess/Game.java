@@ -7,7 +7,6 @@ import Chess.Util.*;
 
 
 public class Game {
-    //TODO : Implement a Chess game, where this will store all data related to a occuring chess game
     //THIS WILL ENCAPSULATE A WHOLE GAME. AND WILL ONLY ALLOW MOVES THROUGH THIS CLASS
 
     Stack<ChessBoard> BoardHistory = new Stack<>();
@@ -29,8 +28,6 @@ public class Game {
             this.BoardHistory.add(histBoard);
         }
     }
-    
-    //Implement all public methods of chessboard, but for every update, add to board history
 
     public boolean Move(ChessCoor initialCoor, ChessCoor NewCoor){
         if(currentBoard.Move(initialCoor, NewCoor)){
@@ -92,7 +89,6 @@ public class Game {
         this.currentCheckEvent = checkEvent;
     }
 
-    //TODO : Implement when win method should be called in this class.
 
     public void win(PieceColor winner){
         if(currentWinEvent != null){

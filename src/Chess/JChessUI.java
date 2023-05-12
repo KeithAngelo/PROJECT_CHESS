@@ -62,7 +62,6 @@ public class JChessUI extends JPanel{
     
 
     /* 
-    TODO :
     Depending on what color the player chose, 
     render the buttons in the appropriate order, 
     so that if played black, black pieces are on the bottom, and vice versa
@@ -102,7 +101,6 @@ public class JChessUI extends JPanel{
                 ArrayList<ChessCoor> possibleMoves = ChessGame.currentBoard.getAllowedSquaresAt(SelectedSquare);
                 ChessCoor myCoor = new ChessCoor(XCoor, YCoor);
                 if(myCoor.isContainedIn(possibleMoves)){
-                    //TODO : Instead Of Border, draw green square in middle
                     this.setBorder(AllowedMoveBorder);
                 }
 
@@ -149,70 +147,70 @@ public class JChessUI extends JPanel{
                 }
 
                 if(StillLoading){
-                    LoadElements();
                     return;
                 }
                     
-                if(!AgainstBot || ChessGame.getCurrentTurn() == PlayerColor){
-
-                        
-
-                    if(currentPiece == null){
-                        makeAmove = SelectedSquare != null;
-                    }else{
-                         //Cases for when square should be selected 
-                        if(currentPiece != null && currentPiece.getColor()==CurrentTurn){
-                            SelectedSquare = new ChessCoor(XCoor, YCoor);
-                        }
-
-                        if(InCheck && currentPiece.getType() == PieceType.KING && currentPiece.getColor() == CurrentTurn){
-                            this.setBorder(CheckedBorder);
-                        }
-
-                            
-                        // Cases for when move should be executed
-
-                        if(SelectedSquare != null && !(currentPiece.getColor().equals(CurrentTurn)) ){
-                            //TODO : add more guard clauses if necessarry
-                            makeAmove = true;
-                        }
-                    }
-
-                    if(!makeAmove){
-                        LoadElements();
-                        return;
-                    }
-
-                    InCheck = false;
-
-
-                    int oldX = SelectedSquare.getX();
-                    int oldY = SelectedSquare.getY();
-                    if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
-                        if(myMoveEvent != null){
-                            myMoveEvent.doMoveEvent(CurrentTurn);
-                        }
-                        SelectedSquare = null;
-
-                    }else{
-                        LoadElements();
-                        return;
-                    }
-
-                    if(!GameIsFinished && makeAmove){
-                        StillLoading = true;
-
-                        
-
-                        BG_Run multithread = new BG_Run( () -> {
-                            botAction(); 
-                        });
-                        multithread.start();
-                            
-                    }
-                            
-
+                if(AgainstBot && !(ChessGame.getCurrentTurn() == PlayerColor)){
+                    return;
                 }
+
+                        
+
+                if(currentPiece == null){
+                    makeAmove = SelectedSquare != null;
+                }else{
+                        //Cases for when square should be selected 
+                    if(currentPiece != null && currentPiece.getColor()==CurrentTurn){
+                        SelectedSquare = new ChessCoor(XCoor, YCoor);
+                    }
+
+                    if(InCheck && currentPiece.getType() == PieceType.KING && currentPiece.getColor() == CurrentTurn){
+                        this.setBorder(CheckedBorder);
+                    }
+
+                        
+                    // Cases for when move should be executed
+
+                    if(SelectedSquare != null && !(currentPiece.getColor().equals(CurrentTurn)) ){
+                        makeAmove = true;
+                    }
+                }
+
+                if(!makeAmove){
+                    LoadElements();
+                    return;
+                }
+
+                InCheck = false;
+
+
+                int oldX = SelectedSquare.getX();
+                int oldY = SelectedSquare.getY();
+                if(ChessGame.Move(new ChessCoor(oldX,oldY), new ChessCoor(XCoor,YCoor))){
+                    if(myMoveEvent != null){
+                        myMoveEvent.doMoveEvent(CurrentTurn);
+                    }
+                    SelectedSquare = null;
+
+                }else{
+                    LoadElements();
+                    return;
+                }
+
+                if(!GameIsFinished && makeAmove){
+                    StillLoading = true;
+
+                    
+
+                    BG_Run multithread = new BG_Run( () -> {
+                        botAction(); 
+                    });
+                    multithread.start();
+                        
+                }
+                            
+
+                
                 
             //Brain damage
                 
