@@ -355,6 +355,8 @@ public class ChessBoard {
         return AllowedSquares;
     }
 
+
+    //stinky poopy typecasting stinky
     public boolean isCheckMated(){
         // TODO : HANDLE POSSIBLE EXCEPTIONS !!!!!
 
@@ -420,7 +422,7 @@ public class ChessBoard {
                 }
             }
         }
-
+        // i hate this too okay
         for(int X = 0; X < 8; X++){
             for(int Y = 0; Y < 8; Y++){
                 if(board[X][Y] == null){

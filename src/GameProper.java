@@ -13,6 +13,7 @@ import javax.swing.border.Border;
 import Chess.Util.*;
 import CustomAssets.Styling;
 import Chess.*;
+import Chess.Piece.King;
 
 public class GameProper extends JFrame{
     //There are two constructors (Method Overloading), one for singleplayer, one for two players
@@ -125,6 +126,7 @@ public class GameProper extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
+        this.setIconImage(new King(PieceColor.WHITE).getImg().getImage());
 
             this.add(ChessUI, BorderLayout.CENTER);
             this.add(TopPanel, BorderLayout.NORTH);
