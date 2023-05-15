@@ -8,7 +8,11 @@ public class Styling {
     public static int defaultFontSize = 20;
     public static int defaultFontWeight = 1;
 
-    public static Font defaultFont = new Font(defaultfontName, defaultFontWeight, defaultFontSize);
+    public static int boldFontWeight = 3;
+    public static int boldFontSize = 35;
+
+    public static Font defaultFont = new Font(defaultfontName, Font.PLAIN, defaultFontSize);
+    public static Font BoldFont = new Font(defaultfontName, Font.BOLD, boldFontSize);
 
     public static Color PrimaryColor = new Color(0xf3c311);
     public static Color SecondaryColor = new Color(0xFFFFFF);

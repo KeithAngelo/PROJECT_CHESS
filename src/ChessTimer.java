@@ -2,6 +2,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import CustomAssets.CText;
+import CustomAssets.Styling;
 
 public class ChessTimer extends JPanel {
     int startTimeMilis;
@@ -17,7 +18,7 @@ public class ChessTimer extends JPanel {
           // Display the starting time in minutes and seconds
           int minutes = startingTime / 60000;
           int seconds = (startingTime % 60000) / 1000;
-          text = new CText(String.format("%s%d:%s%d",getLeadingZero(minutes), minutes, getLeadingZero(seconds),seconds));
+          text = new CText(String.format("%s%d:%s%d",getLeadingZero(minutes), minutes, getLeadingZero(seconds),seconds), Styling.BoldFont);
           this.add(text);
 
         // Create the timer

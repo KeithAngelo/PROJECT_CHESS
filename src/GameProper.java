@@ -35,6 +35,7 @@ public class GameProper extends JFrame{
     boolean isSinglePlayer;
 
     
+
     class Player{
         String Name;
         PieceColor Color;
@@ -102,9 +103,6 @@ public class GameProper extends JFrame{
         player_1 = new Player(Player_Name, ChosenColor);
         player_2 = new Player(defaultBotName, PieceColor.getOther(ChosenColor));
 
-        TopPanel = new PlayerPanel(player_1);
-        BottomPanel  = new PlayerPanel(player_2);
-
         construct();
     }
 
@@ -116,8 +114,6 @@ public class GameProper extends JFrame{
         player_1 = new Player(Player1_Name, Player1_Color);
         player_2 = new Player(Player2_Name, PieceColor.getOther(Player1_Color));
 
-        TopPanel = new PlayerPanel(player_1);
-        BottomPanel  = new PlayerPanel(player_2);
 
         construct();
     }
@@ -125,6 +121,16 @@ public class GameProper extends JFrame{
     
 
     private void construct(){
+        
+
+        if(!isSinglePlayer){
+            BottomPanel  = new PlayerPanel(getPlayer(PieceColor.WHITE));
+            TopPanel = new PlayerPanel(getPlayer(PieceColor.BLACK));
+        }else{
+            TopPanel = new PlayerPanel(player_2);
+            BottomPanel  = new PlayerPanel(player_1);
+        }
+
         this.setResizable(false); 
         this.setSize(FRAME_WIDTH,FRAME_HEIGHT + (ChessUI_Dimension/10)); 
         this.setTitle("Chess");
