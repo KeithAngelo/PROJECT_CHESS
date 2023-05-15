@@ -2,6 +2,8 @@
 
 
 import javax.swing.*;
+import javax.swing.event.SwingPropertyChangeSupport;
+
 import java.awt.*;
 import java.awt.event.*;
 

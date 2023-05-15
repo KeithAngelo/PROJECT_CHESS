@@ -13,7 +13,6 @@ import javax.swing.border.Border;
 import Chess.Util.*;
 import CustomAssets.Styling;
 import Chess.*;
-import Chess.Piece.King;
 import Chess.Piece.Pawn;
 
 public class GameProper extends JFrame{
@@ -31,7 +30,7 @@ public class GameProper extends JFrame{
 
     PieceColor CurrentTurn = PieceColor.WHITE;
 
-    int StartTimeMilis = 10000;
+    int StartTimeMilis = 600000;
 
     boolean isSinglePlayer;
 
@@ -45,7 +44,12 @@ public class GameProper extends JFrame{
         Player(String Name, PieceColor color){
             this.Name = Name;
             this.Color = color;
-            Timer = new ChessTimer(StartTimeMilis, () -> new GameFinish(PieceColor.getOther(Color), EndStatus.WIN_BY_TIME));
+
+            Timer = new ChessTimer(StartTimeMilis, () ->{
+                new GameFinish(PieceColor.getOther(Color), EndStatus.WIN_BY_TIME); 
+                ChessUI.AllowMoves(false);
+            });
+
             profiles = new PlayerProfiles(Name, Color);
         }
     }
