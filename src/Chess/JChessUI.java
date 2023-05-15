@@ -33,7 +33,7 @@ public class JChessUI extends JPanel{
     private ChessCoor SelectedSquare; //Coordinate of selected square. Make this null if no selected square
 
     final private int Dimension;
-    PieceColor PlayerColor = PieceColor.WHITE; //Color of player for easier reading. Pieces of this color Should be at the bottom
+    public PieceColor PlayerColor = PieceColor.WHITE; //Color of player for easier reading. Pieces of this color Should be at the bottom
     /* Default player color is white unless specified */
 
     Color WhiteSquares = new Color(0xf3fff0);

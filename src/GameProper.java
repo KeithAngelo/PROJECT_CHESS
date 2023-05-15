@@ -122,14 +122,14 @@ public class GameProper extends JFrame{
 
     private void construct(){
         
-
         if(!isSinglePlayer){
-            BottomPanel  = new PlayerPanel(getPlayer(PieceColor.WHITE));
             TopPanel = new PlayerPanel(getPlayer(PieceColor.BLACK));
+            BottomPanel = new PlayerPanel(getPlayer(PieceColor.WHITE));
         }else{
             TopPanel = new PlayerPanel(player_2);
             BottomPanel  = new PlayerPanel(player_1);
         }
+        
 
         this.setResizable(false); 
         this.setSize(FRAME_WIDTH,FRAME_HEIGHT + (ChessUI_Dimension/10)); 
