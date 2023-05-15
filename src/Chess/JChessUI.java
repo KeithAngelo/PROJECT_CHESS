@@ -197,7 +197,7 @@ public class JChessUI extends JPanel{
                     return;
                 }
 
-                if(!GameIsFinished && makeAmove){
+                if(!GameIsFinished && makeAmove && AgainstBot){
                     StillLoading = true;
 
                     
@@ -226,7 +226,7 @@ public class JChessUI extends JPanel{
         
 
         private void botAction(){
-            if(AgainstBot && !GameIsFinished){
+            if(!GameIsFinished){
                 ChessCoor[] botMove = new ChessCoor[2];
                 botMove = myBot.GenerateMove(ChessGame);
 
@@ -312,6 +312,7 @@ public class JChessUI extends JPanel{
         //Everytime there is a move or action, reload the whole board
 
         this.removeAll();
+
         if(PlayerColor == PieceColor.WHITE){
             //YCoor are ascending
             for(int Y = 0; Y < GridDimension; Y++){
